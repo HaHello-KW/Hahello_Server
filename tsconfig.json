@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "ES5",                                     /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
+
+    /* Modules */
+    "module": "commonjs",                                /* Specify what module code is generated. */
+    "moduleResolution": "node",
+    "rootDir": "src",                                    /* Specify the root folder within your source files. */                            /* List of file name suffixes to search when resolving a module. */
+    "resolveJsonModule": true,                           /* Enable importing .json files. */
+    "typeRoots": [
+      "./node_moudles/@types",
+      "./src/define"
+    ],
+    /* JavaScript Support */
+    "allowJs": true,                                     /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */
+    "outDir": "./dist",                                   /* Specify an output folder for all emitted files. */
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": false,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
+    "forceConsistentCasingInFileNames": true,    
+    "sourceMap": true,    
+    "lib": ["es2015", "es2016", "es2017", "es2018", "es2019", "es2020", "es2021", "es2022"],
+    /* Type Checking */
+    "strict": true,                                      /* Enable all strict type-checking options. */
+    "noImplicitAny": true,                               /* Enable error reporting for expressions and declarations with an implied 'any' type. */
+    /* Completeness */
+    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
