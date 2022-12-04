@@ -13,17 +13,17 @@ import { Components } from "./Components";
 export class Options {
   @PrimaryGeneratedColumn({ type: "int" })
   @OneToMany(() => Components, (component) => component.Option_PK)
-  Option_Id: Number;
+  Option_Id!: Number;
 
   @Column({ type: "int" })
   @ManyToOne(() => Questions, (question) => question.Question_ID)
-  Question_PK: Number;
+  Question_PK!: Number;
 
   @Column({ type: "int" })
-  Option_Index: Number;
+  Option_Index!: Number;
 
   @Column({ type: "varchar" })
-  Content: string;
+  Content!: string;
 }
 
 export default Options;
