@@ -1,5 +1,3 @@
-# KEET_SERVER
+# HAHELLO_SERVER
 
-: KEET Application을 위한 Server-side repository입니다.
-
-Test입니다.
+: 여성 건강관리 애플리케이션을 위한 Server Repository입니다.
