@@ -5,17 +5,14 @@ import { User_Giver } from './User_Giver';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  @OneToMany(() => Choices, (choice) => choice.Choice_Id)
+  /* @OneToMany(() => Choices, (choice) => choice.Choice_Id) */
   Id!: string;
 
   @Column({ type: 'varchar' })
-  Pw!: string;
+  password!: string;
 
   @Column({ type: 'varchar' })
   Name!: string;
-
-  @Column({ type: 'varchar' })
-  Sex!: string;
 
   @Column({ type: 'varchar' })
   Birth!: string;
@@ -24,11 +21,17 @@ export class User {
   Email!: string;
 
   @Column({ type: 'varchar', unique: true })
-  @OneToMany(() => User_Giver, (user_giver) => user_giver.User_NickName)
+  // @OneToMany(() => User_Giver, (user_giver) => user_giver.User_NickName)
   NickName!: string;
 
   @Column({ type: 'varchar' })
   Address!: string;
+
+  @Column({ type: 'int' })
+  Height!: Number;
+
+  @Column({ type: 'int' })
+  Weight!: Number;
 }
 
 export default User;
