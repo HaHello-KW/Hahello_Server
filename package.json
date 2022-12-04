@@ -46,6 +46,7 @@
     "hpp": "^0.2.3",
     "id-auto-increment": "^1.0.1",
     "jsonwebtoken": "^8.5.1",
+    "sequelize": "^6.26.0",
     "swagger-ui-express": "^4.5.0",
     "typeorm": "^0.3.8",
     "typeorm-naming-strategies": "^4.1.0",
