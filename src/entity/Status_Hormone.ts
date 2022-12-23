@@ -5,8 +5,9 @@ import { Questions } from './Questions';
 import { Components } from './Components';
 
 @Entity()
-export class Choices {
+export class Status_Hormone {
   @PrimaryGeneratedColumn({ type: 'int' })
+  @PrimaryGeneratedColumn('increment')
   Hormone_id!: Number;
 
   @Column({ type: 'int' })
@@ -34,4 +35,4 @@ export class Choices {
   TSH!: Number;
 }
 
-export default Choices;
+export default Status_Hormone;
