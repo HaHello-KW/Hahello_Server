@@ -1,21 +1,19 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Choices } from './Choices';
 import Married from './Married';
 import Pregnant from './Pregnant';
-import { User_Giver } from './User_Giver';
 
 @Entity()
 export class User_Default_Info {
   @PrimaryGeneratedColumn({ type: 'int' })
   @PrimaryGeneratedColumn('increment')
   /* @OneToMany(() => Choices, (choice) => choice.Choice_Id) */
-  User_Default_Info_id!: Number;
+  User_Default_Info_id!: number;
 
   @Column({ type: 'varchar' })
   Birth!: string;
 
   @Column({ type: 'int' })
-  Ovary_Type!: Number;
+  Ovary_Type!: number;
 
   @Column({ type: 'char' })
   @OneToMany(() => Married, (married) => married.User_Type)

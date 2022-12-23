@@ -1,38 +1,35 @@
 import { IntegerDataType } from 'sequelize';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, ManyToMany } from 'typeorm';
-import { User } from './User';
-import { Questions } from './Questions';
-import { Components } from './Components';
 
 @Entity()
 export class Status_Hormone {
   @PrimaryGeneratedColumn({ type: 'int' })
   @PrimaryGeneratedColumn('increment')
-  Hormone_id!: Number;
+  Hormone_id!: number;
 
   @Column({ type: 'int' })
-  Past_Experience!: Number;
+  Past_Experience!: number;
 
   @Column({ type: 'datetime' })
-  Test_Date!: Number;
+  Test_Date!: number;
 
   @Column({ type: 'datetime' })
-  Hormone_Test_Date!: Number;
+  Hormone_Test_Date!: number;
 
   @Column({ type: 'float' })
-  AMH!: Number;
+  AMH!: number;
 
   @Column({ type: 'float' })
-  LH!: Number;
+  LH!: number;
 
   @Column({ type: 'float' })
-  E2!: Number;
+  E2!: number;
 
   @Column({ type: 'float' })
-  FSH!: Number;
+  FSH!: number;
 
   @Column({ type: 'float' })
-  TSH!: Number;
+  TSH!: number;
 }
 
 export default Status_Hormone;

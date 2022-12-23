@@ -1,41 +1,38 @@
 import { IntegerDataType } from 'sequelize';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, ManyToMany } from 'typeorm';
-import { User } from './User';
-import { Questions } from './Questions';
-import { Components } from './Components';
 
 @Entity()
 export class Status_Body {
   @PrimaryGeneratedColumn({ type: 'int' })
   @PrimaryGeneratedColumn('increment')
-  Body_id!: Number;
+  Body_id!: number;
 
   @Column({ type: 'int' })
-  Past_Experience!: Number;
+  Past_Experience!: number;
 
   @Column({ type: 'datetime' })
-  Test_Date!: Number;
+  Test_Date!: number;
 
   @Column({ type: 'datetime' })
-  Body_Test_Date!: Number;
+  Body_Test_Date!: number;
 
   @Column({ type: 'float' })
-  Subun!: Number;
+  Subun!: number;
 
   @Column({ type: 'float' })
-  Mugigil!: Number;
+  Mugigil!: number;
 
   @Column({ type: 'float' })
-  Muscle!: Number;
+  Muscle!: number;
 
   @Column({ type: 'float' })
-  Protein!: Number;
+  Protein!: number;
 
   @Column({ type: 'float' })
-  Fat!: Number;
+  Fat!: number;
 
   @Column({ type: 'float' })
-  Fat_Stomach!: Number;
+  Fat_Stomach!: number;
 }
 
 export default Status_Body;
