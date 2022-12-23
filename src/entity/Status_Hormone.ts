@@ -1,4 +1,3 @@
-import { IntegerDataType } from 'sequelize';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, ManyToMany } from 'typeorm';
 
 @Entity()
@@ -10,11 +9,11 @@ export class Status_Hormone {
   @Column({ type: 'int' })
   Past_Experience!: number;
 
-  @Column({ type: 'datetime' })
-  Test_Date!: number;
+  @Column({ type: 'char' })
+  Test_Date!: string;
 
-  @Column({ type: 'datetime' })
-  Hormone_Test_Date!: number;
+  @Column({ type: 'char' })
+  Hormone_Test_Date!: string;
 
   @Column({ type: 'float' })
   AMH!: number;

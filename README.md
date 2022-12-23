@@ -16,4 +16,6 @@
 
 (22.12.23)
 
--
+- Pregnant, Menstruation, Freezing, Treatment, User_Default_Info, Married DB 코드 작성
+- 기존 코드 Refactoring
+- 기존 필요없는 소스코드 삭제 / 수정

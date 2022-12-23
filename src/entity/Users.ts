@@ -1,6 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Choices } from './Old_Choices';
-import { User_Giver } from './Old_User_Giver';
 
 @Entity()
 export class Users {
@@ -21,13 +19,7 @@ export class Users {
   email!: string;
 
   @Column({ type: 'varchar' })
-  Address!: string;
-
-  // @Column({ type: 'int' })
-  // Height!: Number;
-
-  // @Column({ type: 'int' })
-  // Weight!: Number;
+  address!: string;
 }
 
 export default Users;
