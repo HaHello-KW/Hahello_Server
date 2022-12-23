@@ -9,3 +9,11 @@
 - KEET_Server로부터의 Migration 완료
 - TypeScript 관련 Syntax 오류 디버깅
 - User, Status_Hormone, Status_Body DB 코드 추가
+
+(22.12.22)
+
+- DB 1차 설계 완료
+
+(22.12.23)
+
+-

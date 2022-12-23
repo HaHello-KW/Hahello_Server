@@ -1,12 +1,12 @@
-import "reflect-metadata";
-import { ConnectionOptions, createConnection } from "typeorm";
-import { SnakeNamingStrategy } from "typeorm-naming-strategies";
-import { User } from "./entity/User";
+import 'reflect-metadata';
+import { ConnectionOptions, createConnection } from 'typeorm';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { User } from './entity/Users';
 
 const dataSource = async (): Promise<void> => {
   try {
     const connectionOption: ConnectionOptions = {
-      type: "mysql",
+      type: 'mysql',
       host: process.env.DB_HOST,
       port: Number(process.env.DB_PORT) || 3306,
       username: process.env.DB_USERNAME,
@@ -14,13 +14,13 @@ const dataSource = async (): Promise<void> => {
       database: process.env.DB_DATABASE,
       synchronize: true,
       logging: false,
-      entities: ["src/entity/**/*.ts"],
-      migrations: ["src/migration/**/*.ts"],
-      subscribers: ["src/subscriber/**/*.ts"],
+      entities: ['src/entity/**/*.ts'],
+      migrations: ['src/migration/**/*.ts'],
+      subscribers: ['src/subscriber/**/*.ts'],
       namingStrategy: new SnakeNamingStrategy(),
     };
     await createConnection(connectionOption);
   } catch (err) {
-    console.log("Connection Error \n", err);
+    console.log('Connection Error \n', err);
   }
 };
