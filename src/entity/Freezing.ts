@@ -5,10 +5,10 @@ export class Freezing {
   @PrimaryGeneratedColumn()
   Freezing_id!: number;
 
-  @Column({ type: 'number' })
+  @Column({ type: 'int' })
   Freezing_past_experience!: number;
 
-  @Column({ type: 'number' })
+  @Column({ type: 'int' })
   Freezing_egg_count!: number;
 }
 

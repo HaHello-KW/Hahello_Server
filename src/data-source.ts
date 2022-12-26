@@ -11,9 +11,9 @@ export const MySQLDataSource = new DataSource({
   database: process.env.DB_DATABASE,
   synchronize: true,
   logging: false,
-  entities: ['src/entity/**/*.ts'],
-  migrations: ['src/migration/**/*.ts'],
-  subscribers: ['src/subscriber/**/*.ts'],
+  entities: ['dist/entity/**/*.js'],
+  migrations: ['dist/migration/**/*.js'],
+  subscribers: ['dist/subscriber/**/*.js'],
   namingStrategy: new SnakeNamingStrategy(),
   /**
    * namingStrategy

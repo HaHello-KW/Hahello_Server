@@ -5,7 +5,6 @@ import Pregnant from './Pregnant';
 @Entity()
 export class User_Default_Info {
   @PrimaryGeneratedColumn({ type: 'int' })
-  @PrimaryGeneratedColumn('increment')
   /* @OneToMany(() => Choices, (choice) => choice.Choice_Id) */
   User_Default_Info_id!: number;
 
