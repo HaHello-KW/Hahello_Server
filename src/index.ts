@@ -1,3 +1,5 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
 import * as express from 'express';
 import { Request, Response, NextFunction, Application } from 'express';
 import { MySQLDataSource } from './data-source';

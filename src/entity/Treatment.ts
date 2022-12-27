@@ -5,7 +5,7 @@ export class Treatment {
   @PrimaryGeneratedColumn()
   Treatment_id!: number;
 
-  @Column({ type: 'number' })
+  @Column({ type: 'int' })
   Freezing_past_experience!: number;
 
   @Column({ type: 'boolean' })
