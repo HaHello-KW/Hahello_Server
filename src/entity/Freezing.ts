@@ -10,6 +10,9 @@ export class Freezing {
 
   @Column({ type: 'int' })
   Freezing_egg_count!: number;
+
+  @Column({ type: 'int' })
+  Freezing_year!: number;
 }
 
 export default Freezing;

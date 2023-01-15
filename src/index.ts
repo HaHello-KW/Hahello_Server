@@ -22,11 +22,11 @@ MySQLDataSource.initialize()
 
 // Register Routes
 app.get('/', (req, res) => {
-  res.send('Initialized KEET server');
+  res.send('Initialized Hahello server');
 });
 // app.get('/user', userController.(   ));
 
 // Server Listening
 app.listen(prod ? process.env.PORT : 3065, () => {
-  console.log(`KEET-server is running on PORT:${process.env.PORT}`);
+  console.log(`Hahello-server is running on PORT:${process.env.PORT}`);
 });
