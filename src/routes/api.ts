@@ -755,8 +755,9 @@ app.get('/defaultPage', (req: express.Request, res: express.Response) => {
   res.send(default_page);
 });
 
-app.get('/typePage', (req: express.Request, res: express.Response) => {
-  const user_type = req.body.married_type;
+app.get('/typePage/:type', (req: express.Request, res: express.Response) => {
+  // const user_type = req.body.married_type;
+  const user_type = req.params.type;
   if (user_type === 'A') {
     res.send(A_Page);
   } else if (user_type === 'B') {
@@ -841,8 +842,8 @@ app.post('/defaultPage', (req: express.Request, res: express.Response) => {
   res.redirect('/defaultPage');
 });
 
-app.post('/typePage', (req: express.Request, res: express.Response) => {
-  const user_type = req.body.married_type;
+app.post('/typePage/:type', (req: express.Request, res: express.Response) => {
+  const user_type = req.params.type;
   const q_type = req.body.questionType;
   const new_level = req.body.level;
 
@@ -1077,7 +1078,7 @@ app.post('/typePage', (req: express.Request, res: express.Response) => {
     });
     type_E_level++;
   }
-  res.redirect('/typePage');
+  res.redirect('/typePage/' + user_type);
 });
 // ==============================================
 
@@ -1129,8 +1130,8 @@ app.put('/defaultPage', (req: express.Request, res: express.Response) => {
   res.redirect('/defaultPage');
 });
 
-app.put('/typePage', (req: express.Request, res: express.Response) => {
-  const user_type = req.body.married_type;
+app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
+  const user_type = req.params.type;
   let find_level = req.body.level;
   const q_type = req.body.questionType;
   if (typeof find_level != 'undefined') {
@@ -1341,7 +1342,7 @@ app.put('/typePage', (req: express.Request, res: express.Response) => {
       });
     }
   }
-  res.redirect('/typePage');
+  res.redirect('/typePage/' + user_type);
 });
 
 app.delete('/defaultPage', (req: express.Request, res: express.Response) => {
@@ -1378,8 +1379,8 @@ app.delete('/defaultPage', (req: express.Request, res: express.Response) => {
   res.redirect('/defaultPage');
 });
 
-app.delete('/typePage', (req: express.Request, res: express.Response) => {
-  let user_type = req.body.married_type;
+app.delete('/typePage/:type', (req: express.Request, res: express.Response) => {
+  let user_type = req.params.type;
   let find_level = req.body.level;
   if (typeof find_level != 'undefined') {
     if (user_type === 'A') {
@@ -1424,7 +1425,7 @@ app.delete('/typePage', (req: express.Request, res: express.Response) => {
       type_E_level--;
     }
   }
-  res.redirect('/typePage');
+  res.redirect('/typePage/' + user_type);
 });
 
 app.listen(app.get('port'), () => {
