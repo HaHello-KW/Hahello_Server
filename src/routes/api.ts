@@ -1,5 +1,5 @@
-//import image from '../images';
 import * as express from 'express';
+import images from '../img';
 
 const app = express();
 
@@ -39,6 +39,7 @@ interface Content {
 }
 interface Small {
   level: number;
+  depth: number; //각 질문의 깊이 ex)Q-A-4 : 깊이 0, Q-A-4-1 : 깊이 1
   imgpath?: string;
   questionType: string;
   questionID: string;
@@ -51,14 +52,6 @@ interface Small {
   questionTitle?: string; //해당 질문제목
   count?: number; //선택지 개수
   contents?: Array<string>;
-  in_pages?: Array<ThreelinePicker | Button>;
-  if?: {
-    contents?: string;
-    $or?: Array<Content>;
-  };
-  then?: {
-    in_page?: Array<ThreelinePicker | Button>;
-  };
   nextpage?: string | Array<string>;
 }
 interface Result {
@@ -84,8 +77,9 @@ let default_page: Type = {
   pages: [
     {
       level: default_level++,
+      depth: 0,
       //imgpath: image.null,
-      questionType: 'Picker_ThreeLine',
+      questionType: 'Threeline_Picker',
       questionID: 'Q-Default-1',
       questionTitle_First: '나는',
       questionTitle_Second: '에',
@@ -96,6 +90,7 @@ let default_page: Type = {
     },
     {
       level: default_level++, //upbar에 표시할 단계
+      depth: 0,
       //imgpath: image.null,
       questionType: 'Button_Selector', //해당 질문유형
       questionID: 'Q-Default-2', //해당 질문코드
@@ -113,6 +108,7 @@ let default_page: Type = {
     },
     {
       level: default_level++, //upbar에 표시할 단계
+      depth: 0,
       //imgpath: image.null,
       questionType: 'Button_Selector', //해당 질문유형
       questionID: 'Q-Default-3', //해당 질문코드
@@ -142,8 +138,9 @@ let A_Page: Type = {
   message: 'typePage_A 정상 반환',
   pages: [
     {
-      level: type_A_level++,
-      //imgpath: image.user_A,
+      level: type_A_level,
+      depth: 0,
+      //imgpath: images.userA,
       questionType: 'Button_Selector',
       questionID: 'Q-A-1',
       questionTitle: '나는', //해당 질문제목
@@ -154,27 +151,25 @@ let A_Page: Type = {
         '결혼 생각이 없어',
         '아직 잘 모르겠어',
       ],
-      if: {
-        contents: '결혼하고 싶어',
-      },
-      then: {
-        in_page: [
-          {
-            questionType: 'Picker_ThreeLine',
-            questionID: 'Q-A-1-1',
-            questionTitle_First: '나는',
-            questionTitle_Second: '살쯤에',
-            questionTitle_Third: '결혼하면 좋겠어',
-            First_pickerType: 'NumberPicker',
-            Second_pickerType: 'None',
-          },
-        ],
-      },
-      nextpage: 'Q-A-2',
+      nextpage: 'Q-A-1-1',
     },
     {
       level: type_A_level++,
-      //imgpath: image.user_A,
+      depth: 1,
+      //imgpath: images.userA,
+      questionType: 'Threeline_Picker',
+      questionID: 'Q-A-1-1',
+      questionTitle_First: '나는',
+      questionTitle_Second: '살쯤에',
+      questionTitle_Third: '결혼하면 좋겠어',
+      First_pickerType: 'NumberPicker',
+      Second_pickerType: 'None',
+      nextpage: 'Q-A-2',
+    },
+    {
+      level: type_A_level,
+      depth: 0,
+      //imgpath: image.userA,
       questionType: 'Button_Selector',
       questionID: 'Q-A-2',
       questionTitle: '나는 아이를', //해당 질문제목
@@ -184,39 +179,56 @@ let A_Page: Type = {
         '갖고 싶어',
         '갖고 싶은 생각이 없어',
       ],
-      if: {
-        contents: '갖고 싶어',
-      },
-      then: {
-        in_page: [
-          {
-            questionType: 'Picker_ThreeLine',
-            questionID: 'Q-A-2-1',
-            questionTitle_First: '나는',
-            questionTitle_Second: '살에',
-            questionTitle_Third: '첫째 아이를 갖고 싶어',
-            First_pickerType: 'NumberPicker',
-            Second_pickerType: 'None',
-          },
-          {
-            questionType: 'Button_Selector',
-            questionID: 'Q-A-2-2',
-            questionTitle: '나는', //해당 질문제목
-            count: 2, //선택지 개수
-            contents: ['아이를 1명만 갖고 싶어', '둘째도 갖고 싶어'],
-          },
-          //Q-A-2-1, Q-A-2-2까지 구현
-          //Q-A-2-3은 아직 미작성
-        ],
-      },
+      nextpage: 'Q-A-2-1',
+    },
+    {
+      level: type_A_level,
+      depth: 1,
+      //imgpath: image.userA,
+      questionType: 'Threeline_Picker',
+      questionID: 'Q-A-2-1',
+      questionTitle_First: '나는',
+      questionTitle_Second: '살에',
+      questionTitle_Third: '첫째 아이를 갖고 싶어',
+      First_pickerType: 'NumberPicker',
+      Second_pickerType: 'None',
+      nextpage: 'Q-A-2-2',
+    },
+    {
+      level: type_A_level,
+      depth: 2,
+      //imgpath: image.userA,
+      questionType: 'Button_Selector',
+      questionID: 'Q-A-2-2',
+      questionTitle: '나는', //해당 질문제목
+      count: 2, //선택지 개수
+      contents: [
+        //선택지 내용
+        '아이를 1명만 갖고 싶어',
+        '둘째도 갖고 싶어',
+      ],
+      nextpage: 'Q-A-2-3',
+    },
+    {
+      level: type_A_level++,
+      depth: 3,
+      //imgpath: image.userA,
+      questionType: 'Threeline_Picker',
+      questionID: 'Q-A-2-3',
+      questionTitle_First: '나는',
+      questionTitle_Second: '살에',
+      questionTitle_Third: '둘째 아이를 갖고 싶어',
+      First_pickerType: 'NumberPicker',
+      Second_pickerType: 'None',
       nextpage: 'Q-A-3',
     },
     {
       level: type_A_level++,
-      //imgpath: image.user_A,
+      depth: 0,
+      //imgpath: image.userA,
       questionType: 'Button_Selector',
       questionID: 'Q-A-3',
-      questionTitle: '나는 난자 냉동을 ', //해당 질문제목
+      questionTitle: '나는 난자 냉동을', //해당 질문제목
       count: 4, //선택지 개수
       contents: [
         //선택지 내용
@@ -228,9 +240,10 @@ let A_Page: Type = {
       nextpage: 'Q-A-4',
     },
     {
-      level: type_A_level++,
-      //imgpath: image.user_A,
-      questionType: 'Picker_SixLine',
+      level: type_A_level,
+      depth: 0,
+      //imgpath: image.userA,
+      questionType: 'Sixline_Picker',
       questionID: 'Q-A-4',
       questionTitle_First: '나의 마지막(최근) 생리일은',
       questionTitle_Second: '나의 생리주기는',
@@ -238,24 +251,26 @@ let A_Page: Type = {
       First_pickerType: 'DatePicker',
       Second_pickerType: 'NumberPicker',
       Third_pickerType: 'NumberPicker',
-      in_pages: [
-        {
-          questionType: 'Button_Selector',
-          questionID: 'Q-A-4-1',
-          questionTitle: '나는 생리일이 ', //해당 질문제목
-          count: 2, //선택지 개수
-          contents: [
-            //선택지 내용
-            '규칙적이야',
-            '불규칙적이야',
-          ],
-        },
+      nextpage: 'Q-A-4-1',
+    },
+    {
+      level: type_A_level++,
+      depth: 1,
+      //imgpath: image.userA,
+      questionType: 'Button_Selector',
+      questionID: 'Q-A-4-1',
+      questionTitle: '나는 생리일이', //해당 질문제목
+      count: 2, //선택지 개수
+      contents: [
+        //선택지 내용
+        '규칙적이야',
+        '불규칙적이야',
       ],
       nextpage: 'QA-type',
     },
   ],
   result: {
-    questionId: 'Q_userA_Type',
+    questionId: 'QA_Type',
     title: '여유로운 똑똑이 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
     //imgPath: image.userA,
@@ -269,8 +284,9 @@ let B_Page: Type = {
   pages: [
     {
       level: type_B_level++,
-      //imgpath: image.user_B,
-      questionType: 'Picker_ThreeLine',
+      depth: 0,
+      //imgpath: image.userB,
+      questionType: 'Threeline_Picker',
       questionID: 'Q-B-1',
       questionTitle_First: '나는',
       questionTitle_Second: '에',
@@ -280,8 +296,9 @@ let B_Page: Type = {
       nextpage: 'Q-B-2',
     },
     {
-      level: type_B_level++,
-      //imgpath: image.user_B,
+      level: type_B_level,
+      depth: 0,
+      //imgpath: image.userB,
       questionType: 'Button_Selector',
       questionID: 'Q-B-2',
       questionTitle: '나는 아이를', //해당 질문제목
@@ -292,29 +309,38 @@ let B_Page: Type = {
         '둘째도 갖고 싶어',
         '갖고 싶은 생각이 없어',
       ],
-      if: {
-        $or: [{ contents: '갖고 싶어' }, { contents: '둘째도 갖고 싶어' }],
-      },
-      then: {
-        in_page: [
-          {
-            questionType: 'Picker_ThreeLine',
-            questionID: 'Q-B-2-1',
-            questionTitle_First: '나는',
-            questionTitle_Second: '살에',
-            questionTitle_Third: '첫째 아이를 갖고 싶어',
-            First_pickerType: 'NumberPicker',
-            Second_pickerType: 'None',
-          },
-          //Q-B-2-1까지 구현
-          //Q-B-2-2은 아직 미작성
-        ],
-      },
-      nextpage: 'Q-B-3',
+      nextpage: 'Q-B-2-1',
+    },
+    {
+      level: type_B_level,
+      depth: 1,
+      //imgpath: image.userB,
+      questionType: 'Threeline_Picker',
+      questionID: 'Q-B-2-1',
+      questionTitle_First: '나는',
+      questionTitle_Second: '살에',
+      questionTitle_Third: '첫째 아이를 갖고 싶어',
+      First_pickerType: 'NumberPicker',
+      Second_pickerType: 'None',
+      nextpage: 'Q-B-2-2',
     },
     {
       level: type_B_level++,
-      //imgpath: image.user_B,
+      depth: 2,
+      //imgpath: image.userB,
+      questionType: 'Threeline_Picker',
+      questionID: 'Q-B-2-2',
+      questionTitle_First: '나는',
+      questionTitle_Second: '살에',
+      questionTitle_Third: '둘째 아이를 갖고 싶어',
+      First_pickerType: 'NumberPicker',
+      Second_pickerType: 'None',
+      nextpage: 'Q-B-3',
+    },
+    {
+      level: type_B_level,
+      depth: 0,
+      //imgpath: image.userB,
       questionType: 'Button_Selector',
       questionID: 'Q-B-3',
       questionTitle: '나는 난자 냉동을', //해당 질문제목
@@ -326,27 +352,25 @@ let B_Page: Type = {
         '하지 않았고, 별로 관심없어',
         '잘 모르고 있어',
       ],
-      if: {
-        contents: '이미 해서 보관 중이야',
-      },
-      then: {
-        in_page: [
-          {
-            questionType: 'Picker_ThreeLine',
-            questionID: 'Q-B-3-1',
-            questionTitle_First: '나는',
-            questionTitle_Second: '에',
-            questionTitle_Third: '개의 난자를 얼려 놓았어',
-            First_pickerType: 'NumberPicker',
-            Second_pickerType: 'NumberPicker',
-          },
-        ],
-      },
+      nextpage: 'Q-B-3-1',
+    },
+    {
+      level: type_B_level++,
+      depth: 1,
+      //imgpath: image.userB,
+      questionType: 'Threeline_Picker',
+      questionID: 'Q-B-3-1',
+      questionTitle_First: '나는',
+      questionTitle_Second: '에',
+      questionTitle_Third: '개의 난자를 얼려놓았어',
+      First_pickerType: 'NumberPicker',
+      Second_pickerType: 'NumberPicker',
       nextpage: 'Q-B-4',
     },
     {
       level: type_B_level++,
-      //imgpath: image.user_B,
+      depth: 0,
+      //imgpath: image.userB,
       questionType: 'Button_Selector',
       questionID: 'Q-B-4',
       questionTitle: '나는', //해당 질문제목
@@ -359,9 +383,10 @@ let B_Page: Type = {
       nextpage: 'Q-B-5',
     },
     {
-      level: type_B_level++,
-      //imgpath: image.user_B,
-      questionType: 'Picker_SixLine',
+      level: type_B_level,
+      depth: 0,
+      //imgpath: image.userB,
+      questionType: 'Sixline_Picker',
       questionID: 'Q-B-5',
       questionTitle_First: '나의 마지막(최근) 생리일은',
       questionTitle_Second: '나의 생리주기는',
@@ -369,24 +394,26 @@ let B_Page: Type = {
       First_pickerType: 'DatePicker',
       Second_pickerType: 'NumberPicker',
       Third_pickerType: 'NumberPicker',
-      in_pages: [
-        {
-          questionType: 'Button_Selector',
-          questionID: 'Q-B-5-1',
-          questionTitle: '나는 생리일이 ', //해당 질문제목
-          count: 2, //선택지 개수
-          contents: [
-            //선택지 내용
-            '규칙적이야',
-            '불규칙적이야',
-          ],
-        },
+      nextpage: 'Q-B-5-1',
+    },
+    {
+      level: type_B_level++,
+      depth: 1,
+      //imgpath: image.userB,
+      questionType: 'Button_Selector',
+      questionID: 'Q-B-5-1',
+      questionTitle: '나는 생리일이', //해당 질문제목
+      count: 2, //선택지 개수
+      contents: [
+        //선택지 내용
+        '규칙적이야',
+        '불규칙적이야',
       ],
       nextpage: 'QB-type',
     },
   ],
   result: {
-    questionId: 'Q_userB_Type',
+    questionId: 'QB-type',
     title: '여유로운 똑똑이 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
     //imgPath: image.userB,
@@ -399,8 +426,9 @@ let C_Page: Type = {
   pages: [
     {
       level: type_C_level++,
-      //imgpath: image.user_C,
-      questionType: 'Picker_ThreeLine',
+      depth: 0,
+      //imgpath: image.userC,
+      questionType: 'Threeline_Picker',
       questionID: 'Q-C-1',
       questionTitle_First: '나는',
       questionTitle_Second: '에',
@@ -410,8 +438,9 @@ let C_Page: Type = {
       nextpage: 'Q-C-2',
     },
     {
-      level: type_C_level++,
-      //imgpath: image.user_C,
+      level: type_C_level,
+      depth: 0,
+      //imgpath: image.userC,
       questionType: 'Button_Selector',
       questionID: 'Q-C-2',
       questionTitle: '나는 아이를', //해당 질문제목
@@ -422,29 +451,38 @@ let C_Page: Type = {
         '둘째도 갖고 싶어',
         '갖고 싶은 생각이 없어',
       ],
-      if: {
-        $or: [{ contents: '갖고 싶어' }, { contents: '둘째도 갖고 싶어' }],
-      },
-      then: {
-        in_page: [
-          {
-            questionType: 'Picker_ThreeLine',
-            questionID: 'Q-C-2-1',
-            questionTitle_First: '나는',
-            questionTitle_Second: '살에',
-            questionTitle_Third: '첫째 아이를 갖고 싶어',
-            First_pickerType: 'NumberPicker',
-            Second_pickerType: 'None',
-          },
-          //Q-C-2-1까지 구현
-          //Q-C-2-2은 아직 미작성
-        ],
-      },
-      nextpage: 'Q-C-3',
+      nextpage: 'Q-C-2-1',
+    },
+    {
+      level: type_C_level,
+      depth: 1,
+      //imgpath: image.userC,
+      questionType: 'Threeline_Picker',
+      questionID: 'Q-C-2-1',
+      questionTitle_First: '나는',
+      questionTitle_Second: '살에',
+      questionTitle_Third: '첫째 아이를 갖고 싶어',
+      First_pickerType: 'NumberPicker',
+      Second_pickerType: 'None',
+      nextpage: 'Q-C-2-2',
     },
     {
       level: type_C_level++,
-      //imgpath: image.user_C,
+      depth: 2,
+      //imgpath: image.userC,
+      questionType: 'Threeline_Picker',
+      questionID: 'Q-C-2-2',
+      questionTitle_First: '나는',
+      questionTitle_Second: '살에',
+      questionTitle_Third: '둘째 아이를 갖고 싶어',
+      First_pickerType: 'NumberPicker',
+      Second_pickerType: 'None',
+      nextpage: 'Q-C-3',
+    },
+    {
+      level: type_C_level,
+      depth: 0,
+      //imgpath: image.userC,
       questionType: 'Button_Selector',
       questionID: 'Q-C-3',
       questionTitle: '나는 난자 냉동을', //해당 질문제목
@@ -456,27 +494,25 @@ let C_Page: Type = {
         '하지 않았고, 별로 관심없어',
         '잘 모르고 있어',
       ],
-      if: {
-        contents: '이미 해서 보관 중이야',
-      },
-      then: {
-        in_page: [
-          {
-            questionType: 'Picker_ThreeLine',
-            questionID: 'Q-C-3-1',
-            questionTitle_First: '나는',
-            questionTitle_Second: '에',
-            questionTitle_Third: '개의 난자를 얼려 놓았어',
-            First_pickerType: 'NumberPicker',
-            Second_pickerType: 'NumberPicker',
-          },
-        ],
-      },
+      nextpage: 'Q-C-3-1',
+    },
+    {
+      level: type_C_level++,
+      depth: 1,
+      //imgpath: image.userC,
+      questionType: 'Threeline_Picker',
+      questionID: 'Q-C-3-1',
+      questionTitle_First: '나는',
+      questionTitle_Second: '에',
+      questionTitle_Third: '개의 난자를 얼려놓았어',
+      First_pickerType: 'NumberPicker',
+      Second_pickerType: 'NumberPicker',
       nextpage: 'Q-C-4',
     },
     {
       level: type_C_level++,
-      //imgpath: image.user_C,
+      depth: 0,
+      //imgpath: image.userC,
       questionType: 'Button_Selector',
       questionID: 'Q-C-4',
       questionTitle: '나는', //해당 질문제목
@@ -489,9 +525,10 @@ let C_Page: Type = {
       nextpage: 'Q-C-5',
     },
     {
-      level: type_C_level++,
-      //imgpath: image.user_C,
-      questionType: 'Picker_SixLine',
+      level: type_C_level,
+      depth: 0,
+      //imgpath: image.userC,
+      questionType: 'Sixline_Picker',
       questionID: 'Q-C-5',
       questionTitle_First: '나의 마지막(최근) 생리일은',
       questionTitle_Second: '나의 생리주기는',
@@ -499,24 +536,26 @@ let C_Page: Type = {
       First_pickerType: 'DatePicker',
       Second_pickerType: 'NumberPicker',
       Third_pickerType: 'NumberPicker',
-      in_pages: [
-        {
-          questionType: 'Button_Selector',
-          questionID: 'Q-C-5-1',
-          questionTitle: '나는 생리일이 ', //해당 질문제목
-          count: 2, //선택지 개수
-          contents: [
-            //선택지 내용
-            '규칙적이야',
-            '불규칙적이야',
-          ],
-        },
+      nextpage: 'Q-C-5-1',
+    },
+    {
+      level: type_C_level++,
+      depth: 1,
+      //imgpath: image.userC,
+      questionType: 'Button_Selector',
+      questionID: 'Q-C-5-1',
+      questionTitle: '나는 생리일이', //해당 질문제목
+      count: 2, //선택지 개수
+      contents: [
+        //선택지 내용
+        '규칙적이야',
+        '불규칙적이야',
       ],
       nextpage: 'QC-type',
     },
   ],
   result: {
-    questionId: 'Q_userC_Type',
+    questionId: 'QC-type',
     title: '여유로운 똑똑이 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
     //imgPath: image.userC,
@@ -529,7 +568,8 @@ let D_Page: Type = {
   pages: [
     {
       level: type_D_level++,
-      //imgpath: image.user_D,
+      depth: 0,
+      //imgpath: image.userD,
       questionType: 'Button_Selector',
       questionID: 'Q-D-1',
       questionTitle: '나는', //해당 질문제목
@@ -542,8 +582,9 @@ let D_Page: Type = {
       nextpage: 'Q-D-2',
     },
     {
-      level: type_D_level++,
-      //imgpath: image.user_D,
+      level: type_D_level,
+      depth: 0,
+      //imgpath: image.userD,
       questionType: 'Hybrid_Type',
       questionID: 'Q-D-2',
       questionTitle_First: '나는',
@@ -555,13 +596,59 @@ let D_Page: Type = {
       contents: [
         //선택지 내용
         '둘째 생각이 있어',
-        '셋째 생각이 있어',
+        '둘째 생각이 없어',
       ],
-      nextpage: 'Q-D-3',
+      nextpage: 'Q-D-2-1',
+    },
+    {
+      level: type_D_level,
+      depth: 1,
+      //imgpath: image.userD,
+      questionType: 'Threeline_Picker',
+      questionID: 'Q-D-2-1',
+      questionTitle_First: '나는',
+      questionTitle_Second: '살에',
+      questionTitle_Third: '둘째 아이를 갖고 싶어',
+      First_pickerType: 'NumberPicker',
+      Second_pickerType: 'None',
+      nextpage: 'Q-D-2-2',
+    },
+    {
+      level: type_D_level,
+      depth: 2,
+      //imgpath: image.userD,
+      questionType: 'Hybrid_Type',
+      questionID: 'Q-D-2-2',
+      questionTitle_First: '나는',
+      questionTitle_Second: '에',
+      questionTitle_Third: '둘째를 낳았고',
+      First_pickerType: 'NumberPicker',
+      Second_pickerType: 'None',
+      count: 2, //선택지 개수
+      contents: [
+        //선택지 내용
+        '셋째 생각이 있어',
+        '셋째 생각이 없어',
+      ],
+      nextpage: 'Q-D-2-3',
     },
     {
       level: type_D_level++,
-      //imgpath: image.user_D,
+      depth: 3,
+      //imgpath: image.userD,
+      questionType: 'Threeline_Picker',
+      questionID: 'Q-D-2-3',
+      questionTitle_First: '나는',
+      questionTitle_Second: '살에',
+      questionTitle_Third: '셋째 아이를 갖고 싶어',
+      First_pickerType: 'NumberPicker',
+      Second_pickerType: 'None',
+      nextpage: 'Q-D-3',
+    },
+    {
+      level: type_D_level,
+      depth: 0,
+      //imgpath: image.userD,
       questionType: 'Button_Selector',
       questionID: 'Q-D-3',
       questionTitle: '나는 난자 냉동을', //해당 질문제목
@@ -573,27 +660,25 @@ let D_Page: Type = {
         '하지 않았고, 별로 관심없어',
         '잘 모르고 있어',
       ],
-      if: {
-        contents: '이미 해서 보관 중이야',
-      },
-      then: {
-        in_page: [
-          {
-            questionType: 'Picker_ThreeLine',
-            questionID: 'Q-D-3-1',
-            questionTitle_First: '나는',
-            questionTitle_Second: '에',
-            questionTitle_Third: '개의 난자를 얼려 놓았어',
-            First_pickerType: 'NumberPicker',
-            Second_pickerType: 'NumberPicker',
-          },
-        ],
-      },
+      nextpage: 'Q-D-3-1',
+    },
+    {
+      level: type_D_level++,
+      depth: 1,
+      //imgpath: image.userD,
+      questionType: 'Threeline_Picker',
+      questionID: 'Q-D-3-1',
+      questionTitle_First: '나는',
+      questionTitle_Second: '에',
+      questionTitle_Third: '개의 난자를 얼려 놓았어',
+      First_pickerType: 'NumberPicker',
+      Second_pickerType: 'NumberPicker',
       nextpage: 'Q-D-4',
     },
     {
       level: type_D_level++,
-      //imgpath: image.user_D,
+      depth: 0,
+      //imgpath: image.userD,
       questionType: 'Button_Selector',
       questionID: 'Q-D-4',
       questionTitle: '나는', //해당 질문제목
@@ -606,9 +691,10 @@ let D_Page: Type = {
       nextpage: 'Q-D-5',
     },
     {
-      level: type_D_level++,
-      //imgpath: image.user_D,
-      questionType: 'Picker_SixLine',
+      level: type_D_level,
+      depth: 0,
+      //imgpath: image.userD,
+      questionType: 'Sixline_Picker',
       questionID: 'Q-D-5',
       questionTitle_First: '나의 마지막(최근) 생리일은',
       questionTitle_Second: '나의 생리주기는',
@@ -616,24 +702,26 @@ let D_Page: Type = {
       First_pickerType: 'DatePicker',
       Second_pickerType: 'NumberPicker',
       Third_pickerType: 'NumberPicker',
-      in_pages: [
-        {
-          questionType: 'Button_Selector',
-          questionID: 'Q-D-5-1',
-          questionTitle: '나는 생리일이 ', //해당 질문제목
-          count: 2, //선택지 개수
-          contents: [
-            //선택지 내용
-            '규칙적이야',
-            '불규칙적이야',
-          ],
-        },
+      nextpage: 'Q-D-5-1',
+    },
+    {
+      level: type_D_level++,
+      depth: 1,
+      //imgpath: image.userD,
+      questionType: 'Button_Selector',
+      questionID: 'Q-D-5-1',
+      questionTitle: '나는 생리일이', //해당 질문제목
+      count: 2, //선택지 개수
+      contents: [
+        //선택지 내용
+        '규칙적이야',
+        '불규칙적이야',
       ],
       nextpage: 'QD-type',
     },
   ],
   result: {
-    questionId: 'Q_userD_Type',
+    questionId: 'QD_Type',
     title: '여유로운 똑똑이 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
     //imgPath: image.userD,
@@ -646,8 +734,9 @@ let E_Page: Type = {
   pages: [
     {
       level: type_E_level++,
-      //imgpath: image.user_E,
-      questionType: 'Picker_ThreeLine',
+      depth: 0,
+      //imgpath: image.userE,
+      questionType: 'Threeline_Picker',
       questionID: 'Q-E-1',
       questionTitle_First: '나는',
       questionTitle_Second: '에',
@@ -657,8 +746,9 @@ let E_Page: Type = {
       nextpage: 'Q-E-2',
     },
     {
-      level: type_E_level++,
-      //imgpath: image.user_E,
+      level: type_E_level,
+      depth: 0,
+      //imgpath: image.userE,
       questionType: 'Button_Selector',
       questionID: 'Q-E-2',
       questionTitle: '나는', //해당 질문제목
@@ -668,26 +758,54 @@ let E_Page: Type = {
         '첫 번째 임신 중이야',
         '두 번째 임신 중이야',
       ],
-      in_pages: [
-        {
-          questionType: 'Button_Selector',
-          questionID: 'Q-E-2-1',
-          questionTitle: '나는 ', //해당 질문제목
-          count: 3, //선택지 개수
-          contents: [
-            //선택지 내용
-            '둘째를 갖고 싶어',
-            '셋째를 갖고 싶어',
-            '아이를 갖고 싶은 생각이 없어',
-          ],
-        },
-        //Q-E-2-2, Q-E-2-3 경우 속의 속의 속의 질문이라고 판단해서 미작성
+      nextpage: 'Q-E-2-1',
+    },
+    {
+      level: type_E_level,
+      depth: 1,
+      //imgpath: image.userE,
+      questionType: 'Button_Selector',
+      questionID: 'Q-E-2-1',
+      questionTitle: '나는', //해당 질문제목
+      count: 3, //선택지 개수
+      contents: [
+        //선택지 내용
+        '둘째를 갖고 싶어',
+        '셋째를 갖고 싶어',
+        '아이를 갖고 싶은 생각이 없어',
       ],
-      nextpage: 'Q-E-3',
+      nextpage: 'Q-E-2-2',
+    },
+    {
+      level: type_E_level,
+      depth: 2,
+      //imgpath: image.userE,
+      questionType: 'Threeline_Picker',
+      questionID: 'Q-E-2-2',
+      questionTitle_First: '나는',
+      questionTitle_Second: '살 터울의',
+      questionTitle_Third: '둘째 아이를 갖고 싶어',
+      First_pickerType: 'NumberPicker',
+      Second_pickerType: 'None',
+      nextpage: 'Q-E-2-3',
     },
     {
       level: type_E_level++,
-      //imgpath: image.user_E,
+      depth: 3,
+      //imgpath: image.userE,
+      questionType: 'Threeline_Picker',
+      questionID: 'Q-E-2-3',
+      questionTitle_First: '나는',
+      questionTitle_Second: '살 터울의',
+      questionTitle_Third: '셋째 아이를 갖고 싶어',
+      First_pickerType: 'NumberPicker',
+      Second_pickerType: 'None',
+      nextpage: 'Q-E-3',
+    },
+    {
+      level: type_E_level,
+      depth: 0,
+      //imgpath: image.userE,
       questionType: 'Button_Selector',
       questionID: 'Q-E-3',
       questionTitle: '나는 난자 냉동을', //해당 질문제목
@@ -699,28 +817,26 @@ let E_Page: Type = {
         '하지 않았고, 별로 관심없어',
         '잘 모르고 있어',
       ],
-      if: {
-        contents: '이미 해서 보관 중이야',
-      },
-      then: {
-        in_page: [
-          {
-            questionType: 'Picker_ThreeLine',
-            questionID: 'Q-E-3-1',
-            questionTitle_First: '나는',
-            questionTitle_Second: '에',
-            questionTitle_Third: '개의 난자를 얼려 놓았어',
-            First_pickerType: 'NumberPicker',
-            Second_pickerType: 'NumberPicker',
-          },
-        ],
-      },
-      nextpage: 'Q-E-4',
+      nextpage: 'Q-E-3-1',
     },
     {
       level: type_E_level++,
-      //imgpath: image.user_E,
-      questionType: 'Picker_SixLine',
+      depth: 1,
+      //imgpath: image.userC,
+      questionType: 'Threeline_Picker',
+      questionID: 'Q-E-3-1',
+      questionTitle_First: '나는',
+      questionTitle_Second: '에',
+      questionTitle_Third: '개의 난자를 얼려놓았어',
+      First_pickerType: 'NumberPicker',
+      Second_pickerType: 'NumberPicker',
+      nextpage: 'Q-E-4',
+    },
+    {
+      level: type_E_level,
+      depth: 0,
+      //imgpath: image.userE,
+      questionType: 'Sixline_Picker',
       questionID: 'Q-E-4',
       questionTitle_First: '나의 마지막(최근) 생리일은',
       questionTitle_Second: '나의 생리주기는',
@@ -728,24 +844,26 @@ let E_Page: Type = {
       First_pickerType: 'DatePicker',
       Second_pickerType: 'NumberPicker',
       Third_pickerType: 'NumberPicker',
-      in_pages: [
-        {
-          questionType: 'Button_Selector',
-          questionID: 'Q-E-4-1',
-          questionTitle: '나는 생리일이 ', //해당 질문제목
-          count: 2, //선택지 개수
-          contents: [
-            //선택지 내용
-            '규칙적이야',
-            '불규칙적이야',
-          ],
-        },
+      nextpage: 'Q-E-4-1',
+    },
+    {
+      level: type_E_level++,
+      depth: 1,
+      //imgpath: image.userE,
+      questionType: 'Button_Selector',
+      questionID: 'Q-E-4-1',
+      questionTitle: '나는 생리일이', //해당 질문제목
+      count: 2, //선택지 개수
+      contents: [
+        //선택지 내용
+        '규칙적이야',
+        '불규칙적이야',
       ],
       nextpage: 'QE-type',
     },
   ],
   result: {
-    questionId: 'Q_userE_Type',
+    questionId: 'QE_Type',
     title: '여유로운 똑똑이 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
     //imgPath: image.userE,
@@ -774,14 +892,16 @@ app.get('/typePage/:type', (req: express.Request, res: express.Response) => {
 app.post('/defaultPage', (req: express.Request, res: express.Response) => {
   const q_type = req.body.questionType;
   const new_level = req.body.level;
+
   default_page.pages.forEach((item) => {
     if (item.level >= new_level) {
       item.level++;
     }
   });
-  if (q_type == 'Picker_ThreeLine') {
+  if (q_type == 'Threeline_Picker') {
     let default_info = {
       level: new_level,
+      depth: 0,
       questionType: q_type,
       questionID: req.body.questionID,
       questionTitle_First: req.body.questionTitle_First,
@@ -789,21 +909,25 @@ app.post('/defaultPage', (req: express.Request, res: express.Response) => {
       questionTitle_Third: req.body.questionTitle_Third,
       First_pickerType: req.body.First_pickerType,
       Second_pickerType: req.body.Second_pickerType,
+      nextpage: req.body.nextpage,
     };
     default_page.pages = default_page.pages.concat(default_info);
   } else if (q_type == 'Button_Selector') {
     let default_info = {
       level: new_level,
+      depth: 0,
       questionType: q_type,
       questionID: req.body.questionID,
       questionTitle: req.body.questionTitle,
       count: req.body.count,
       contents: req.body.contents,
+      nextpage: req.body.nextpage,
     };
     default_page.pages = default_page.pages.concat(default_info);
-  } else if (q_type == 'Picker_SixLine') {
+  } else if (q_type == 'Sixline_Picker') {
     let default_info = {
       level: new_level,
+      depth: 0,
       questionType: q_type,
       questionID: req.body.questionID,
       questionTitle_First: req.body.questionTitle_First,
@@ -812,6 +936,7 @@ app.post('/defaultPage', (req: express.Request, res: express.Response) => {
       First_pickerType: req.body.First_pickerType,
       Second_pickerType: req.body.Second_pickerType,
       Third_pickerType: req.body.Third_pickerType,
+      nextpage: req.body.nextpage,
     };
     default_page.pages = default_page.pages.concat(default_info);
   }
@@ -846,16 +971,29 @@ app.post('/typePage/:type', (req: express.Request, res: express.Response) => {
   const user_type = req.params.type;
   const q_type = req.body.questionType;
   const new_level = req.body.level;
+  const new_depth = req.body.depth;
 
   if (user_type === 'A') {
     A_Page.pages.forEach((item) => {
-      if (item.level >= new_level) {
-        item.level++;
+      // if (item.level >= new_level) {
+      //   item.level++;
+      // }
+      if (new_depth == 0) {
+        if (item.level >= new_level) {
+          item.level++;
+        }
+      } else {
+        if (item.level == new_level) {
+          if (item.depth >= new_depth) {
+            item.depth++;
+          }
+        }
       }
     });
-    if (q_type == 'Picker_ThreeLine') {
+    if (q_type == 'Threeline_Picker') {
       let A_info = {
         level: new_level,
+        depth: new_depth,
         questionType: q_type,
         questionID: req.body.questionID,
         questionTitle_First: req.body.questionTitle_First,
@@ -863,21 +1001,25 @@ app.post('/typePage/:type', (req: express.Request, res: express.Response) => {
         questionTitle_Third: req.body.questionTitle_Third,
         First_pickerType: req.body.First_pickerType,
         Second_pickerType: req.body.Second_pickerType,
+        nextpage: req.body.nextpage,
       };
       A_Page.pages = A_Page.pages.concat(A_info);
     } else if (q_type == 'Button_Selector') {
       let A_info = {
         level: new_level,
+        depth: new_depth,
         questionType: q_type,
         questionID: req.body.questionID,
         questionTitle: req.body.questionTitle,
         count: req.body.count,
         contents: req.body.contents,
+        nextpage: req.body.nextpage,
       };
       A_Page.pages = A_Page.pages.concat(A_info);
-    } else if (q_type == 'Picker_SixLine') {
+    } else if (q_type == 'Sixline_Picker') {
       let A_info = {
         level: new_level,
+        depth: new_depth,
         questionType: q_type,
         questionID: req.body.questionID,
         questionTitle_First: req.body.questionTitle_First,
@@ -886,22 +1028,40 @@ app.post('/typePage/:type', (req: express.Request, res: express.Response) => {
         First_pickerType: req.body.First_pickerType,
         Second_pickerType: req.body.Second_pickerType,
         Third_pickerType: req.body.Third_pickerType,
+        nextpage: req.body.nextpage,
       };
       A_Page.pages = A_Page.pages.concat(A_info);
     }
     A_Page.pages.sort(function (a, b) {
+      if (a.level == b.level) {
+        return a.depth - b.depth;
+      }
       return a.level - b.level;
     });
-    type_A_level++;
+    if (new_depth == 0) {
+      type_A_level++;
+    }
   } else if (user_type === 'B') {
     B_Page.pages.forEach((item) => {
-      if (item.level >= new_level) {
-        item.level++;
+      // if (item.level >= new_level) {
+      //   item.level++;
+      // }
+      if (new_depth == 0) {
+        if (item.level >= new_level) {
+          item.level++;
+        }
+      } else {
+        if (item.level == new_level) {
+          if (item.depth >= new_depth) {
+            item.depth++;
+          }
+        }
       }
     });
-    if (q_type == 'Picker_ThreeLine') {
+    if (q_type == 'Threeline_Picker') {
       let B_info = {
         level: new_level,
+        depth: new_depth,
         questionType: q_type,
         questionID: req.body.questionID,
         questionTitle_First: req.body.questionTitle_First,
@@ -909,21 +1069,25 @@ app.post('/typePage/:type', (req: express.Request, res: express.Response) => {
         questionTitle_Third: req.body.questionTitle_Third,
         First_pickerType: req.body.First_pickerType,
         Second_pickerType: req.body.Second_pickerType,
+        nextpage: req.body.nextpage,
       };
       B_Page.pages = B_Page.pages.concat(B_info);
     } else if (q_type == 'Button_Selector') {
       let B_info = {
         level: new_level,
+        depth: new_depth,
         questionType: q_type,
         questionID: req.body.questionID,
         questionTitle: req.body.questionTitle,
         count: req.body.count,
         contents: req.body.contents,
+        nextpage: req.body.nextpage,
       };
       B_Page.pages = B_Page.pages.concat(B_info);
-    } else if (q_type == 'Picker_SixLine') {
+    } else if (q_type == 'Sixline_Picker') {
       let B_info = {
         level: new_level,
+        depth: new_depth,
         questionType: q_type,
         questionID: req.body.questionID,
         questionTitle_First: req.body.questionTitle_First,
@@ -932,22 +1096,40 @@ app.post('/typePage/:type', (req: express.Request, res: express.Response) => {
         First_pickerType: req.body.First_pickerType,
         Second_pickerType: req.body.Second_pickerType,
         Third_pickerType: req.body.Third_pickerType,
+        nextpage: req.body.nextpage,
       };
       B_Page.pages = B_Page.pages.concat(B_info);
     }
     B_Page.pages.sort(function (a, b) {
+      if (a.level == b.level) {
+        return a.depth - b.depth;
+      }
       return a.level - b.level;
     });
-    type_B_level++;
+    if (new_depth == 0) {
+      type_B_level++;
+    }
   } else if (user_type === 'C') {
     C_Page.pages.forEach((item) => {
-      if (item.level >= new_level) {
-        item.level++;
+      // if (item.level >= new_level) {
+      //   item.level++;
+      // }
+      if (new_depth == 0) {
+        if (item.level >= new_level) {
+          item.level++;
+        }
+      } else {
+        if (item.level == new_level) {
+          if (item.depth >= new_depth) {
+            item.depth++;
+          }
+        }
       }
     });
-    if (q_type == 'Picker_ThreeLine') {
+    if (q_type == 'Threeline_Picker') {
       let C_info = {
         level: new_level,
+        depth: new_depth,
         questionType: q_type,
         questionID: req.body.questionID,
         questionTitle_First: req.body.questionTitle_First,
@@ -955,21 +1137,25 @@ app.post('/typePage/:type', (req: express.Request, res: express.Response) => {
         questionTitle_Third: req.body.questionTitle_Third,
         First_pickerType: req.body.First_pickerType,
         Second_pickerType: req.body.Second_pickerType,
+        nextpage: req.body.nextpage,
       };
       C_Page.pages = C_Page.pages.concat(C_info);
     } else if (q_type == 'Button_Selector') {
       let C_info = {
         level: new_level,
+        depth: new_depth,
         questionType: q_type,
         questionID: req.body.questionID,
         questionTitle: req.body.questionTitle,
         count: req.body.count,
         contents: req.body.contents,
+        nextpage: req.body.nextpage,
       };
       C_Page.pages = C_Page.pages.concat(C_info);
-    } else if (q_type == 'Picker_SixLine') {
+    } else if (q_type == 'Sixline_Picker') {
       let C_info = {
         level: new_level,
+        depth: new_depth,
         questionType: q_type,
         questionID: req.body.questionID,
         questionTitle_First: req.body.questionTitle_First,
@@ -978,22 +1164,40 @@ app.post('/typePage/:type', (req: express.Request, res: express.Response) => {
         First_pickerType: req.body.First_pickerType,
         Second_pickerType: req.body.Second_pickerType,
         Third_pickerType: req.body.Third_pickerType,
+        nextpage: req.body.nextpage,
       };
       C_Page.pages = C_Page.pages.concat(C_info);
     }
     C_Page.pages.sort(function (a, b) {
+      if (a.level == b.level) {
+        return a.depth - b.depth;
+      }
       return a.level - b.level;
     });
-    type_C_level++;
+    if (new_depth == 0) {
+      type_C_level++;
+    }
   } else if (user_type === 'D') {
     D_Page.pages.forEach((item) => {
-      if (item.level >= new_level) {
-        item.level++;
+      // if (item.level >= new_level) {
+      //   item.level++;
+      // }
+      if (new_depth == 0) {
+        if (item.level >= new_level) {
+          item.level++;
+        }
+      } else {
+        if (item.level == new_level) {
+          if (item.depth >= new_depth) {
+            item.depth++;
+          }
+        }
       }
     });
-    if (q_type == 'Picker_ThreeLine') {
+    if (q_type == 'Threeline_Picker') {
       let D_info = {
         level: new_level,
+        depth: new_depth,
         questionType: q_type,
         questionID: req.body.questionID,
         questionTitle_First: req.body.questionTitle_First,
@@ -1001,21 +1205,25 @@ app.post('/typePage/:type', (req: express.Request, res: express.Response) => {
         questionTitle_Third: req.body.questionTitle_Third,
         First_pickerType: req.body.First_pickerType,
         Second_pickerType: req.body.Second_pickerType,
+        nextpage: req.body.nextpage,
       };
       D_Page.pages = D_Page.pages.concat(D_info);
     } else if (q_type == 'Button_Selector') {
       let D_info = {
         level: new_level,
+        depth: new_depth,
         questionType: q_type,
         questionID: req.body.questionID,
         questionTitle: req.body.questionTitle,
         count: req.body.count,
         contents: req.body.contents,
+        nextpage: req.body.nextpage,
       };
       D_Page.pages = D_Page.pages.concat(D_info);
-    } else if (q_type == 'Picker_SixLine') {
+    } else if (q_type == 'Sixline_Picker') {
       let D_info = {
         level: new_level,
+        depth: new_depth,
         questionType: q_type,
         questionID: req.body.questionID,
         questionTitle_First: req.body.questionTitle_First,
@@ -1024,22 +1232,40 @@ app.post('/typePage/:type', (req: express.Request, res: express.Response) => {
         First_pickerType: req.body.First_pickerType,
         Second_pickerType: req.body.Second_pickerType,
         Third_pickerType: req.body.Third_pickerType,
+        nextpage: req.body.nextpage,
       };
       D_Page.pages = D_Page.pages.concat(D_info);
     }
     D_Page.pages.sort(function (a, b) {
+      if (a.level == b.level) {
+        return a.depth - b.depth;
+      }
       return a.level - b.level;
     });
-    type_D_level++;
+    if (new_depth == 0) {
+      type_D_level++;
+    }
   } else if (user_type === 'E') {
     E_Page.pages.forEach((item) => {
-      if (item.level >= new_level) {
-        item.level++;
+      // if (item.level >= new_level) {
+      //   item.level++;
+      // }
+      if (new_depth == 0) {
+        if (item.level >= new_level) {
+          item.level++;
+        }
+      } else {
+        if (item.level == new_level) {
+          if (item.depth >= new_depth) {
+            item.depth++;
+          }
+        }
       }
     });
-    if (q_type == 'Picker_ThreeLine') {
+    if (q_type == 'Threeline_Picker') {
       let E_info = {
         level: new_level,
+        depth: new_depth,
         questionType: q_type,
         questionID: req.body.questionID,
         questionTitle_First: req.body.questionTitle_First,
@@ -1047,21 +1273,25 @@ app.post('/typePage/:type', (req: express.Request, res: express.Response) => {
         questionTitle_Third: req.body.questionTitle_Third,
         First_pickerType: req.body.First_pickerType,
         Second_pickerType: req.body.Second_pickerType,
+        nextpage: req.body.nextpage,
       };
       E_Page.pages = E_Page.pages.concat(E_info);
     } else if (q_type == 'Button_Selector') {
       let E_info = {
         level: new_level,
+        depth: new_depth,
         questionType: q_type,
         questionID: req.body.questionID,
         questionTitle: req.body.questionTitle,
         count: req.body.count,
         contents: req.body.contents,
+        nextpage: req.body.nextpage,
       };
       E_Page.pages = E_Page.pages.concat(E_info);
-    } else if (q_type == 'Picker_SixLine') {
+    } else if (q_type == 'Sixline_Picker') {
       let E_info = {
         level: new_level,
+        depth: new_depth,
         questionType: q_type,
         questionID: req.body.questionID,
         questionTitle_First: req.body.questionTitle_First,
@@ -1070,13 +1300,19 @@ app.post('/typePage/:type', (req: express.Request, res: express.Response) => {
         First_pickerType: req.body.First_pickerType,
         Second_pickerType: req.body.Second_pickerType,
         Third_pickerType: req.body.Third_pickerType,
+        nextpage: req.body.nextpage,
       };
       E_Page.pages = E_Page.pages.concat(E_info);
     }
     E_Page.pages.sort(function (a, b) {
+      if (a.level == b.level) {
+        return a.depth - b.depth;
+      }
       return a.level - b.level;
     });
-    type_E_level++;
+    if (new_depth == 0) {
+      type_E_level++;
+    }
   }
   res.redirect('/typePage/' + user_type);
 });
@@ -1084,12 +1320,13 @@ app.post('/typePage/:type', (req: express.Request, res: express.Response) => {
 
 app.put('/defaultPage', (req: express.Request, res: express.Response) => {
   const find_level = req.body.level;
+  const q_type = req.body.questionType;
   if (typeof find_level !== 'undefined') {
-    const q_type = req.body.questionType;
     default_page.pages.splice(find_level - 1, 1);
-    if (q_type == 'Picker_ThreeLine') {
+    if (q_type == 'Threeline_Picker') {
       const default_info = {
         level: find_level,
+        depth: 0,
         questionType: q_type,
         questionID: req.body.questionID,
         questionTitle_First: req.body.questionTitle_First,
@@ -1097,21 +1334,25 @@ app.put('/defaultPage', (req: express.Request, res: express.Response) => {
         questionTitle_Third: req.body.questionTitle_Third,
         First_pickerType: req.body.First_pickerType,
         Second_pickerType: req.body.Second_pickerType,
+        nextpage: req.body.nextpage,
       };
       default_page.pages = default_page.pages.concat(default_info);
     } else if (q_type == 'Button_Selector') {
       const default_info = {
         level: find_level,
+        depth: 0,
         questionType: q_type,
         questionID: req.body.questionID,
         questionTitle: req.body.questionTitle,
         count: req.body.count,
         contents: req.body.contents,
+        nextpage: req.body.nextpage,
       };
       default_page.pages = default_page.pages.concat(default_info);
-    } else if (q_type == 'Picker_SixLine') {
+    } else if (q_type == 'Sixline_Picker') {
       let default_info = {
         level: find_level,
+        depth: 0,
         questionType: q_type,
         questionID: req.body.questionID,
         questionTitle_First: req.body.questionTitle_First,
@@ -1120,6 +1361,7 @@ app.put('/defaultPage', (req: express.Request, res: express.Response) => {
         First_pickerType: req.body.First_pickerType,
         Second_pickerType: req.body.Second_pickerType,
         Third_pickerType: req.body.Third_pickerType,
+        nextpage: req.body.nextpage,
       };
       default_page.pages = default_page.pages.concat(default_info);
     }
@@ -1134,12 +1376,15 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
   const user_type = req.params.type;
   let find_level = req.body.level;
   const q_type = req.body.questionType;
+  const find_depth = req.body.depth;
   if (typeof find_level != 'undefined') {
     if (user_type === 'A') {
-      A_Page.pages.splice(find_level - default_level, 1);
-      if (q_type == 'Picker_ThreeLine') {
+      let index = A_Page.pages.findIndex((item) => item.level === find_level && item.depth === find_depth);
+      A_Page.pages.splice(index, 1);
+      if (q_type == 'Threeline_Picker') {
         const type_A_info = {
           level: find_level,
+          depth: find_depth,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1147,21 +1392,25 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
           questionTitle_Third: req.body.questionTitle_Third,
           First_pickerType: req.body.First_pickerType,
           Second_pickerType: req.body.Second_pickerType,
+          nextpage: req.body.nextpage,
         };
         A_Page.pages = A_Page.pages.concat(type_A_info);
       } else if (q_type == 'Button_Selector') {
         const type_A_info = {
           level: find_level,
+          depth: find_depth,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle: req.body.questionTitle,
           count: req.body.count,
           contents: req.body.contents,
+          nextpage: req.body.nextpage,
         };
         A_Page.pages = A_Page.pages.concat(type_A_info);
-      } else if (q_type == 'Picker_SixLine') {
+      } else if (q_type == 'Sixline_Picker') {
         let A_info = {
           level: find_level,
+          depth: find_depth,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1170,17 +1419,23 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
           First_pickerType: req.body.First_pickerType,
           Second_pickerType: req.body.Second_pickerType,
           Third_pickerType: req.body.Third_pickerType,
+          nextpage: req.body.nextpage,
         };
         A_Page.pages = A_Page.pages.concat(A_info);
       }
       A_Page.pages.sort(function (a, b) {
+        if (a.level == b.level) {
+          return a.depth - b.depth;
+        }
         return a.level - b.level;
       });
     } else if (user_type === 'B') {
-      B_Page.pages.splice(find_level - default_level, 1);
-      if (q_type == 'Picker_ThreeLine') {
+      let index = B_Page.pages.findIndex((item) => item.level === find_level && item.depth === find_depth);
+      B_Page.pages.splice(index, 1);
+      if (q_type == 'Threeline_Picker') {
         const type_B_info = {
           level: find_level,
+          depth: find_depth,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1188,21 +1443,25 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
           questionTitle_Third: req.body.questionTitle_Third,
           First_pickerType: req.body.First_pickerType,
           Second_pickerType: req.body.Second_pickerType,
+          nextpage: req.body.nextpage,
         };
         B_Page.pages = B_Page.pages.concat(type_B_info);
       } else if (q_type == 'Button_Selector') {
         const type_B_info = {
           level: find_level,
+          depth: find_depth,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle: req.body.questionTitle,
           count: req.body.count,
           contents: req.body.contents,
+          nextpage: req.body.nextpage,
         };
         B_Page.pages = B_Page.pages.concat(type_B_info);
-      } else if (q_type == 'Picker_SixLine') {
+      } else if (q_type == 'Sixline_Picker') {
         let B_info = {
           level: find_level,
+          depth: find_depth,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1211,17 +1470,23 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
           First_pickerType: req.body.First_pickerType,
           Second_pickerType: req.body.Second_pickerType,
           Third_pickerType: req.body.Third_pickerType,
+          nextpage: req.body.nextpage,
         };
         B_Page.pages = B_Page.pages.concat(B_info);
       }
       B_Page.pages.sort(function (a, b) {
+        if (a.level == b.level) {
+          return a.depth - b.depth;
+        }
         return a.level - b.level;
       });
     } else if (user_type === 'C') {
-      C_Page.pages.splice(find_level - default_level, 1);
-      if (q_type == 'Picker_ThreeLine') {
+      let index = C_Page.pages.findIndex((item) => item.level === find_level && item.depth === find_depth);
+      C_Page.pages.splice(index, 1);
+      if (q_type == 'Threeline_Picker') {
         const type_C_info = {
           level: find_level,
+          depth: find_depth,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1229,21 +1494,25 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
           questionTitle_Third: req.body.questionTitle_Third,
           First_pickerType: req.body.First_pickerType,
           Second_pickerType: req.body.Second_pickerType,
+          nextpage: req.body.nextpage,
         };
         C_Page.pages = C_Page.pages.concat(type_C_info);
       } else if (q_type == 'Button_Selector') {
         const type_C_info = {
           level: find_level,
+          depth: find_depth,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle: req.body.questionTitle,
           count: req.body.count,
           contents: req.body.contents,
+          nextpage: req.body.nextpage,
         };
         C_Page.pages = C_Page.pages.concat(type_C_info);
-      } else if (q_type == 'Picker_SixLine') {
+      } else if (q_type == 'Sixline_Picker') {
         let C_info = {
           level: find_level,
+          depth: find_depth,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1252,17 +1521,23 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
           First_pickerType: req.body.First_pickerType,
           Second_pickerType: req.body.Second_pickerType,
           Third_pickerType: req.body.Third_pickerType,
+          nextpage: req.body.nextpage,
         };
         C_Page.pages = C_Page.pages.concat(C_info);
       }
       C_Page.pages.sort(function (a, b) {
+        if (a.level == b.level) {
+          return a.depth - b.depth;
+        }
         return a.level - b.level;
       });
     } else if (user_type === 'D') {
-      D_Page.pages.splice(find_level - default_level, 1);
-      if (q_type == 'Picker_ThreeLine') {
+      let index = D_Page.pages.findIndex((item) => item.level === find_level && item.depth === find_depth);
+      D_Page.pages.splice(index, 1);
+      if (q_type == 'Threeline_Picker') {
         const type_D_info = {
           level: find_level,
+          depth: find_depth,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1270,21 +1545,25 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
           questionTitle_Third: req.body.questionTitle_Third,
           First_pickerType: req.body.First_pickerType,
           Second_pickerType: req.body.Second_pickerType,
+          nextpage: req.body.nextpage,
         };
         D_Page.pages = D_Page.pages.concat(type_D_info);
       } else if (q_type == 'Button_Selector') {
         const type_D_info = {
           level: find_level,
+          depth: find_depth,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle: req.body.questionTitle,
           count: req.body.count,
           contents: req.body.contents,
+          nextpage: req.body.nextpage,
         };
         D_Page.pages = D_Page.pages.concat(type_D_info);
-      } else if (q_type == 'Picker_SixLine') {
+      } else if (q_type == 'Sixline_Picker') {
         let D_info = {
           level: find_level,
+          depth: find_depth,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1293,17 +1572,23 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
           First_pickerType: req.body.First_pickerType,
           Second_pickerType: req.body.Second_pickerType,
           Third_pickerType: req.body.Third_pickerType,
+          nextpage: req.body.nextpage,
         };
         D_Page.pages = D_Page.pages.concat(D_info);
       }
       D_Page.pages.sort(function (a, b) {
+        if (a.level == b.level) {
+          return a.depth - b.depth;
+        }
         return a.level - b.level;
       });
     } else if (user_type === 'E') {
-      E_Page.pages.splice(find_level - default_level, 1);
-      if (q_type == 'Picker_ThreeLine') {
+      let index = E_Page.pages.findIndex((item) => item.level === find_level && item.depth === find_depth);
+      E_Page.pages.splice(index, 1);
+      if (q_type == 'Threeline_Picker') {
         const type_E_info = {
           level: find_level,
+          depth: find_depth,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1311,21 +1596,25 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
           questionTitle_Third: req.body.questionTitle_Third,
           First_pickerType: req.body.First_pickerType,
           Second_pickerType: req.body.Second_pickerType,
+          nextpage: req.body.nextpage,
         };
         E_Page.pages = E_Page.pages.concat(type_E_info);
       } else if (q_type == 'Button_Selector') {
         const type_E_info = {
           level: find_level,
+          depth: find_depth,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle: req.body.questionTitle,
           count: req.body.count,
           contents: req.body.contents,
+          nextpage: req.body.nextpage,
         };
         E_Page.pages = E_Page.pages.concat(type_E_info);
-      } else if (q_type == 'Picker_SixLine') {
+      } else if (q_type == 'Sixline_Picker') {
         let E_info = {
           level: find_level,
+          depth: find_depth,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1334,10 +1623,14 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
           First_pickerType: req.body.First_pickerType,
           Second_pickerType: req.body.Second_pickerType,
           Third_pickerType: req.body.Third_pickerType,
+          nextpage: req.body.nextpage,
         };
         E_Page.pages = E_Page.pages.concat(E_info);
       }
       E_Page.pages.sort(function (a, b) {
+        if (a.level == b.level) {
+          return a.depth - b.depth;
+        }
         return a.level - b.level;
       });
     }
@@ -1382,47 +1675,123 @@ app.delete('/defaultPage', (req: express.Request, res: express.Response) => {
 app.delete('/typePage/:type', (req: express.Request, res: express.Response) => {
   let user_type = req.params.type;
   let find_level = req.body.level;
+  let find_depth = req.body.depth;
   if (typeof find_level != 'undefined') {
     if (user_type === 'A') {
-      A_Page.pages.splice(find_level - default_level, 1);
+      let index = A_Page.pages.findIndex((item) => item.level === find_level && item.depth === find_depth);
+      A_Page.pages.splice(index, 1);
+      let A_depth = 0;
       A_Page.pages.forEach((item) => {
-        if (item.level > find_level) {
-          item.level -= 1;
+        if (item.level == find_level) {
+          A_depth++;
         }
       });
-      type_A_level--;
+      if (A_depth == 0) {
+        A_Page.pages.forEach((item) => {
+          if (item.level > find_level) {
+            item.level -= 1;
+          }
+        });
+        type_A_level--;
+      } else {
+        A_Page.pages.forEach((item) => {
+          if (item.level == find_level && item.depth > find_depth) {
+            item.depth -= 1;
+          }
+        });
+      }
     } else if (user_type === 'B') {
-      B_Page.pages.splice(find_level - default_level, 1);
+      let index = B_Page.pages.findIndex((item) => item.level === find_level && item.depth === find_depth);
+      B_Page.pages.splice(index, 1);
+      let B_depth = 0;
       B_Page.pages.forEach((item) => {
-        if (item.level > find_level) {
-          item.level -= 1;
+        if (item.level == find_level) {
+          B_depth++;
         }
       });
-      type_B_level--;
+      if (B_depth == 0) {
+        B_Page.pages.forEach((item) => {
+          if (item.level > find_level) {
+            item.level -= 1;
+          }
+        });
+        type_B_level--;
+      } else {
+        B_Page.pages.forEach((item) => {
+          if (item.level == find_level && item.depth > find_depth) {
+            item.depth -= 1;
+          }
+        });
+      }
     } else if (user_type === 'C') {
-      C_Page.pages.splice(find_level - default_level, 1);
+      let index = C_Page.pages.findIndex((item) => item.level === find_level && item.depth === find_depth);
+      C_Page.pages.splice(index, 1);
+      let C_depth = 0;
       C_Page.pages.forEach((item) => {
-        if (item.level > find_level) {
-          item.level -= 1;
+        if (item.level == find_level) {
+          C_depth++;
         }
       });
-      type_C_level--;
+      if (C_depth == 0) {
+        C_Page.pages.forEach((item) => {
+          if (item.level > find_level) {
+            item.level -= 1;
+          }
+        });
+        type_C_level--;
+      } else {
+        C_Page.pages.forEach((item) => {
+          if (item.level == find_level && item.depth > find_depth) {
+            item.depth -= 1;
+          }
+        });
+      }
     } else if (user_type === 'D') {
-      D_Page.pages.splice(find_level - default_level, 1);
+      let index = D_Page.pages.findIndex((item) => item.level === find_level && item.depth === find_depth);
+      D_Page.pages.splice(index, 1);
+      let D_depth = 0;
       D_Page.pages.forEach((item) => {
-        if (item.level > find_level) {
-          item.level -= 1;
+        if (item.level == find_level) {
+          D_depth++;
         }
       });
-      type_D_level--;
+      if (D_depth == 0) {
+        D_Page.pages.forEach((item) => {
+          if (item.level > find_level) {
+            item.level -= 1;
+          }
+        });
+        type_D_level--;
+      } else {
+        D_Page.pages.forEach((item) => {
+          if (item.level == find_level && item.depth > find_depth) {
+            item.depth -= 1;
+          }
+        });
+      }
     } else if (user_type === 'E') {
-      E_Page.pages.splice(find_level - default_level, 1);
+      let index = E_Page.pages.findIndex((item) => item.level === find_level && item.depth === find_depth);
+      E_Page.pages.splice(index, 1);
+      let E_depth = 0;
       E_Page.pages.forEach((item) => {
-        if (item.level > find_level) {
-          item.level -= 1;
+        if (item.level == find_level) {
+          E_depth++;
         }
       });
-      type_E_level--;
+      if (E_depth == 0) {
+        E_Page.pages.forEach((item) => {
+          if (item.level > find_level) {
+            item.level -= 1;
+          }
+        });
+        type_E_level--;
+      } else {
+        E_Page.pages.forEach((item) => {
+          if (item.level == find_level && item.depth > find_depth) {
+            item.depth -= 1;
+          }
+        });
+      }
     }
   }
   res.redirect('/typePage/' + user_type);
