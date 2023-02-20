@@ -2000,6 +2000,10 @@ app.delete('/typePage/:type', (req: express.Request, res: express.Response) => {
         A_Page.pages.forEach((item) => {
           if (item.level > find_level) {
             item.level -= 1;
+            item.imgpath = s3.getSignedUrl('getObject', {
+              Bucket: params_A[item.level - default_level].Bucket,
+              Key: params_A[item.level - default_level].Key,
+            });
           }
         });
         type_A_level--;
@@ -2023,6 +2027,10 @@ app.delete('/typePage/:type', (req: express.Request, res: express.Response) => {
         B_Page.pages.forEach((item) => {
           if (item.level > find_level) {
             item.level -= 1;
+            item.imgpath = s3.getSignedUrl('getObject', {
+              Bucket: params_B[item.level - default_level].Bucket,
+              Key: params_B[item.level - default_level].Key,
+            });
           }
         });
         type_B_level--;
@@ -2046,6 +2054,10 @@ app.delete('/typePage/:type', (req: express.Request, res: express.Response) => {
         C_Page.pages.forEach((item) => {
           if (item.level > find_level) {
             item.level -= 1;
+            item.imgpath = s3.getSignedUrl('getObject', {
+              Bucket: params_C[item.level - default_level].Bucket,
+              Key: params_C[item.level - default_level].Key,
+            });
           }
         });
         type_C_level--;
@@ -2069,6 +2081,10 @@ app.delete('/typePage/:type', (req: express.Request, res: express.Response) => {
         D_Page.pages.forEach((item) => {
           if (item.level > find_level) {
             item.level -= 1;
+            item.imgpath = s3.getSignedUrl('getObject', {
+              Bucket: params_D[item.level - default_level].Bucket,
+              Key: params_D[item.level - default_level].Key,
+            });
           }
         });
         type_D_level--;
@@ -2092,6 +2108,10 @@ app.delete('/typePage/:type', (req: express.Request, res: express.Response) => {
         E_Page.pages.forEach((item) => {
           if (item.level > find_level) {
             item.level -= 1;
+            item.imgpath = s3.getSignedUrl('getObject', {
+              Bucket: params_E[item.level - default_level].Bucket,
+              Key: params_E[item.level - default_level].Key,
+            });
           }
         });
         type_E_level--;
