@@ -1,14 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm';
-import User_Default_Info from './User_Default_Info';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import Test from './Test';
 
 @Entity()
 export class Married {
   @PrimaryGeneratedColumn({ type: 'int' })
-  /* @OneToMany(() => Choices, (choice) => choice.Choice_Id) */
+  @PrimaryGeneratedColumn('increment')
   Married_id!: number;
 
-  @Column({ type: 'char' })
-  @ManyToOne(() => User_Default_Info, (user_default_info) => user_default_info.Married_Type)
+  @Column({ type: 'datetime', nullable: false, unique: true })
+  @OneToOne(() => Test, (test) => test.Test_date)
+  Test_date!: Date;
+
+  @Column({ type: 'char', nullable: false })
   User_Type!: string;
 
   @Column({ type: 'int', nullable: true })

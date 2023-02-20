@@ -1,19 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, ManyToMany } from 'typeorm';
-
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import Users from './Users';
 @Entity()
 export class Status_Body {
   @PrimaryGeneratedColumn({ type: 'int' })
   @PrimaryGeneratedColumn('increment')
   Body_id!: number;
 
-  @Column({ type: 'int' })
-  Past_Experience!: number;
+  @Column({ type: 'varchar', nullable: false })
+  @ManyToOne(() => Users, (users) => users.ID)
+  User_id!: string;
 
-  @Column({ type: 'char' })
-  Test_Date!: string;
-
-  @Column({ type: 'char' })
-  Body_Test_Date!: string;
+  @Column({ type: 'varchar', nullable: false, unique: true })
+  Test_date!: string;
 
   @Column({ type: 'int' })
   Height!: number;

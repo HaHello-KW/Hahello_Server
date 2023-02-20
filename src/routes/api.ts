@@ -1,6 +1,6 @@
 import * as express from 'express';
-import images from '../img';
-
+import { S3 } from '@aws-sdk/client-s3';
+import * as AWS from 'aws-sdk';
 const app = express();
 
 app.set('port', process.env.PORT || 8080);
@@ -8,6 +8,142 @@ app.set('port', process.env.PORT || 8080);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+var s3 = new AWS.S3();
+
+interface Params {
+  Bucket: string;
+  Key: string;
+}
+// var params1: Params = {
+//   Bucket: "hahello-server/images/Type-A/A-1",
+//   Key: "A-1-1.png",
+// };
+const params_A: Array<Params> = [
+  {
+    Bucket: 'hahello-server/images/Type-A/A-1',
+    Key: 'A-1-1.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-A/A-1',
+    Key: 'A-1-2.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-A/A-1',
+    Key: 'A-1-3.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-A/A-1',
+    Key: 'A-1-4.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-A/A-1',
+    Key: 'A-1-5.png',
+  },
+];
+
+const params_B: Array<Params> = [
+  {
+    Bucket: 'hahello-server/images/Type-B/B-1',
+    Key: 'B-1-1.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-B/B-1',
+    Key: 'B-1-2.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-B/B-1',
+    Key: 'B-1-3.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-B/B-1',
+    Key: 'B-1-4.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-B/B-1',
+    Key: 'B-1-5.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-B/B-1',
+    Key: 'B-1-6.png',
+  },
+];
+
+const params_C: Array<Params> = [
+  {
+    Bucket: 'hahello-server/images/Type-C/C-1',
+    Key: 'C-1-1.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-C/C-1',
+    Key: 'C-1-2.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-C/C-1',
+    Key: 'C-1-3.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-C/C-1',
+    Key: 'C-1-4.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-C/C-1',
+    Key: 'C-1-5.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-C/C-1',
+    Key: 'C-1-6.png',
+  },
+];
+
+const params_D: Array<Params> = [
+  {
+    Bucket: 'hahello-server/images/Type-D/D-1',
+    Key: 'D-1-1.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-D/D-1',
+    Key: 'D-1-2.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-D/D-1',
+    Key: 'D-1-3.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-D/D-1',
+    Key: 'D-1-4.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-D/D-1',
+    Key: 'D-1-5.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-D/D-1',
+    Key: 'D-1-6.png',
+  },
+];
+
+const params_E: Array<Params> = [
+  {
+    Bucket: 'hahello-server/images/Type-E/E-1',
+    Key: 'E-1-1.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-E/E-1',
+    Key: 'E-1-2.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-E/E-1',
+    Key: 'E-1-3.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-E/E-1',
+    Key: 'E-1-4.png',
+  },
+  {
+    Bucket: 'hahello-server/images/Type-E/E-1',
+    Key: 'E-1-5.png',
+  },
+];
 interface ThreelinePicker {
   questionType: string;
   questionID: string;
@@ -38,9 +174,9 @@ interface Content {
   contents: string;
 }
 interface Small {
+  imgpath?: object | string;
   level: number;
   depth: number; //각 질문의 깊이 ex)Q-A-4 : 깊이 0, Q-A-4-1 : 깊이 1
-  imgpath?: string;
   questionType: string;
   questionID: string;
   questionTitle_First?: string;
@@ -55,10 +191,10 @@ interface Small {
   nextpage?: string | Array<string>;
 }
 interface Result {
+  imgpath?: object | string;
   questionId: string;
   title: string;
   description: Array<string>;
-  imgPath?: string;
 }
 interface Type {
   id: string;
@@ -138,9 +274,12 @@ let A_Page: Type = {
   message: 'typePage_A 정상 반환',
   pages: [
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_A[type_A_level - default_level].Bucket,
+        Key: params_A[type_A_level - default_level].Key,
+      }),
       level: type_A_level,
       depth: 0,
-      //imgpath: images.userA,
       questionType: 'Button_Selector',
       questionID: 'Q-A-1',
       questionTitle: '나는', //해당 질문제목
@@ -154,9 +293,12 @@ let A_Page: Type = {
       nextpage: 'Q-A-1-1',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_A[type_A_level - default_level].Bucket,
+        Key: params_A[type_A_level - default_level].Key,
+      }),
       level: type_A_level++,
       depth: 1,
-      //imgpath: images.userA,
       questionType: 'Threeline_Picker',
       questionID: 'Q-A-1-1',
       questionTitle_First: '나는',
@@ -167,9 +309,12 @@ let A_Page: Type = {
       nextpage: 'Q-A-2',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_A[type_A_level - default_level].Bucket,
+        Key: params_A[type_A_level - default_level].Key,
+      }),
       level: type_A_level,
       depth: 0,
-      //imgpath: image.userA,
       questionType: 'Button_Selector',
       questionID: 'Q-A-2',
       questionTitle: '나는 아이를', //해당 질문제목
@@ -182,9 +327,12 @@ let A_Page: Type = {
       nextpage: 'Q-A-2-1',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_A[type_A_level - default_level].Bucket,
+        Key: params_A[type_A_level - default_level].Key,
+      }),
       level: type_A_level,
       depth: 1,
-      //imgpath: image.userA,
       questionType: 'Threeline_Picker',
       questionID: 'Q-A-2-1',
       questionTitle_First: '나는',
@@ -195,9 +343,12 @@ let A_Page: Type = {
       nextpage: 'Q-A-2-2',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_A[type_A_level - default_level].Bucket,
+        Key: params_A[type_A_level - default_level].Key,
+      }),
       level: type_A_level,
       depth: 2,
-      //imgpath: image.userA,
       questionType: 'Button_Selector',
       questionID: 'Q-A-2-2',
       questionTitle: '나는', //해당 질문제목
@@ -210,9 +361,12 @@ let A_Page: Type = {
       nextpage: 'Q-A-2-3',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_A[type_A_level - default_level].Bucket,
+        Key: params_A[type_A_level - default_level].Key,
+      }),
       level: type_A_level++,
       depth: 3,
-      //imgpath: image.userA,
       questionType: 'Threeline_Picker',
       questionID: 'Q-A-2-3',
       questionTitle_First: '나는',
@@ -223,9 +377,12 @@ let A_Page: Type = {
       nextpage: 'Q-A-3',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_A[type_A_level - default_level].Bucket,
+        Key: params_A[type_A_level - default_level].Key,
+      }),
       level: type_A_level++,
       depth: 0,
-      //imgpath: image.userA,
       questionType: 'Button_Selector',
       questionID: 'Q-A-3',
       questionTitle: '나는 난자 냉동을', //해당 질문제목
@@ -240,9 +397,12 @@ let A_Page: Type = {
       nextpage: 'Q-A-4',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_A[type_A_level - default_level].Bucket,
+        Key: params_A[type_A_level - default_level].Key,
+      }),
       level: type_A_level,
       depth: 0,
-      //imgpath: image.userA,
       questionType: 'Sixline_Picker',
       questionID: 'Q-A-4',
       questionTitle_First: '나의 마지막(최근) 생리일은',
@@ -254,9 +414,12 @@ let A_Page: Type = {
       nextpage: 'Q-A-4-1',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_A[type_A_level - default_level].Bucket,
+        Key: params_A[type_A_level - default_level].Key,
+      }),
       level: type_A_level++,
       depth: 1,
-      //imgpath: image.userA,
       questionType: 'Button_Selector',
       questionID: 'Q-A-4-1',
       questionTitle: '나는 생리일이', //해당 질문제목
@@ -270,10 +433,13 @@ let A_Page: Type = {
     },
   ],
   result: {
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_A[type_A_level - default_level].Bucket,
+      Key: params_A[type_A_level - default_level].Key,
+    }),
     questionId: 'QA_Type',
     title: '여유로운 똑똑이 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
-    //imgPath: image.userA,
   }, //QA-type
 };
 
@@ -283,9 +449,12 @@ let B_Page: Type = {
   message: 'typePage_B 정상 반환',
   pages: [
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_B[type_B_level - default_level].Bucket,
+        Key: params_B[type_B_level - default_level].Key,
+      }),
       level: type_B_level++,
       depth: 0,
-      //imgpath: image.userB,
       questionType: 'Threeline_Picker',
       questionID: 'Q-B-1',
       questionTitle_First: '나는',
@@ -296,9 +465,12 @@ let B_Page: Type = {
       nextpage: 'Q-B-2',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_B[type_B_level - default_level].Bucket,
+        Key: params_B[type_B_level - default_level].Key,
+      }),
       level: type_B_level,
       depth: 0,
-      //imgpath: image.userB,
       questionType: 'Button_Selector',
       questionID: 'Q-B-2',
       questionTitle: '나는 아이를', //해당 질문제목
@@ -312,9 +484,12 @@ let B_Page: Type = {
       nextpage: 'Q-B-2-1',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_B[type_B_level - default_level].Bucket,
+        Key: params_B[type_B_level - default_level].Key,
+      }),
       level: type_B_level,
       depth: 1,
-      //imgpath: image.userB,
       questionType: 'Threeline_Picker',
       questionID: 'Q-B-2-1',
       questionTitle_First: '나는',
@@ -325,9 +500,12 @@ let B_Page: Type = {
       nextpage: 'Q-B-2-2',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_B[type_B_level - default_level].Bucket,
+        Key: params_B[type_B_level - default_level].Key,
+      }),
       level: type_B_level++,
       depth: 2,
-      //imgpath: image.userB,
       questionType: 'Threeline_Picker',
       questionID: 'Q-B-2-2',
       questionTitle_First: '나는',
@@ -338,9 +516,12 @@ let B_Page: Type = {
       nextpage: 'Q-B-3',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_B[type_B_level - default_level].Bucket,
+        Key: params_B[type_B_level - default_level].Key,
+      }),
       level: type_B_level,
       depth: 0,
-      //imgpath: image.userB,
       questionType: 'Button_Selector',
       questionID: 'Q-B-3',
       questionTitle: '나는 난자 냉동을', //해당 질문제목
@@ -355,9 +536,12 @@ let B_Page: Type = {
       nextpage: 'Q-B-3-1',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_B[type_B_level - default_level].Bucket,
+        Key: params_B[type_B_level - default_level].Key,
+      }),
       level: type_B_level++,
       depth: 1,
-      //imgpath: image.userB,
       questionType: 'Threeline_Picker',
       questionID: 'Q-B-3-1',
       questionTitle_First: '나는',
@@ -368,9 +552,12 @@ let B_Page: Type = {
       nextpage: 'Q-B-4',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_B[type_B_level - default_level].Bucket,
+        Key: params_B[type_B_level - default_level].Key,
+      }),
       level: type_B_level++,
       depth: 0,
-      //imgpath: image.userB,
       questionType: 'Button_Selector',
       questionID: 'Q-B-4',
       questionTitle: '나는', //해당 질문제목
@@ -383,9 +570,12 @@ let B_Page: Type = {
       nextpage: 'Q-B-5',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_B[type_B_level - default_level].Bucket,
+        Key: params_B[type_B_level - default_level].Key,
+      }),
       level: type_B_level,
       depth: 0,
-      //imgpath: image.userB,
       questionType: 'Sixline_Picker',
       questionID: 'Q-B-5',
       questionTitle_First: '나의 마지막(최근) 생리일은',
@@ -397,9 +587,12 @@ let B_Page: Type = {
       nextpage: 'Q-B-5-1',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_B[type_B_level - default_level].Bucket,
+        Key: params_B[type_B_level - default_level].Key,
+      }),
       level: type_B_level++,
       depth: 1,
-      //imgpath: image.userB,
       questionType: 'Button_Selector',
       questionID: 'Q-B-5-1',
       questionTitle: '나는 생리일이', //해당 질문제목
@@ -413,10 +606,13 @@ let B_Page: Type = {
     },
   ],
   result: {
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_B[type_B_level - default_level].Bucket,
+      Key: params_B[type_B_level - default_level].Key,
+    }),
     questionId: 'QB-type',
     title: '여유로운 똑똑이 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
-    //imgPath: image.userB,
   }, //QB-type
 };
 let C_Page: Type = {
@@ -425,9 +621,12 @@ let C_Page: Type = {
   message: 'typePage_C 정상 반환',
   pages: [
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_C[type_C_level - default_level].Bucket,
+        Key: params_C[type_C_level - default_level].Key,
+      }),
       level: type_C_level++,
       depth: 0,
-      //imgpath: image.userC,
       questionType: 'Threeline_Picker',
       questionID: 'Q-C-1',
       questionTitle_First: '나는',
@@ -438,9 +637,12 @@ let C_Page: Type = {
       nextpage: 'Q-C-2',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_C[type_C_level - default_level].Bucket,
+        Key: params_C[type_C_level - default_level].Key,
+      }),
       level: type_C_level,
       depth: 0,
-      //imgpath: image.userC,
       questionType: 'Button_Selector',
       questionID: 'Q-C-2',
       questionTitle: '나는 아이를', //해당 질문제목
@@ -454,9 +656,12 @@ let C_Page: Type = {
       nextpage: 'Q-C-2-1',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_C[type_C_level - default_level].Bucket,
+        Key: params_C[type_C_level - default_level].Key,
+      }),
       level: type_C_level,
       depth: 1,
-      //imgpath: image.userC,
       questionType: 'Threeline_Picker',
       questionID: 'Q-C-2-1',
       questionTitle_First: '나는',
@@ -467,9 +672,12 @@ let C_Page: Type = {
       nextpage: 'Q-C-2-2',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_C[type_C_level - default_level].Bucket,
+        Key: params_C[type_C_level - default_level].Key,
+      }),
       level: type_C_level++,
       depth: 2,
-      //imgpath: image.userC,
       questionType: 'Threeline_Picker',
       questionID: 'Q-C-2-2',
       questionTitle_First: '나는',
@@ -480,9 +688,12 @@ let C_Page: Type = {
       nextpage: 'Q-C-3',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_C[type_C_level - default_level].Bucket,
+        Key: params_C[type_C_level - default_level].Key,
+      }),
       level: type_C_level,
       depth: 0,
-      //imgpath: image.userC,
       questionType: 'Button_Selector',
       questionID: 'Q-C-3',
       questionTitle: '나는 난자 냉동을', //해당 질문제목
@@ -497,9 +708,12 @@ let C_Page: Type = {
       nextpage: 'Q-C-3-1',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_C[type_C_level - default_level].Bucket,
+        Key: params_C[type_C_level - default_level].Key,
+      }),
       level: type_C_level++,
       depth: 1,
-      //imgpath: image.userC,
       questionType: 'Threeline_Picker',
       questionID: 'Q-C-3-1',
       questionTitle_First: '나는',
@@ -510,9 +724,12 @@ let C_Page: Type = {
       nextpage: 'Q-C-4',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_C[type_C_level - default_level].Bucket,
+        Key: params_C[type_C_level - default_level].Key,
+      }),
       level: type_C_level++,
       depth: 0,
-      //imgpath: image.userC,
       questionType: 'Button_Selector',
       questionID: 'Q-C-4',
       questionTitle: '나는', //해당 질문제목
@@ -525,9 +742,12 @@ let C_Page: Type = {
       nextpage: 'Q-C-5',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_C[type_C_level - default_level].Bucket,
+        Key: params_C[type_C_level - default_level].Key,
+      }),
       level: type_C_level,
       depth: 0,
-      //imgpath: image.userC,
       questionType: 'Sixline_Picker',
       questionID: 'Q-C-5',
       questionTitle_First: '나의 마지막(최근) 생리일은',
@@ -539,9 +759,12 @@ let C_Page: Type = {
       nextpage: 'Q-C-5-1',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_C[type_C_level - default_level].Bucket,
+        Key: params_C[type_C_level - default_level].Key,
+      }),
       level: type_C_level++,
       depth: 1,
-      //imgpath: image.userC,
       questionType: 'Button_Selector',
       questionID: 'Q-C-5-1',
       questionTitle: '나는 생리일이', //해당 질문제목
@@ -555,10 +778,13 @@ let C_Page: Type = {
     },
   ],
   result: {
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_C[type_C_level - default_level].Bucket,
+      Key: params_C[type_C_level - default_level].Key,
+    }),
     questionId: 'QC-type',
     title: '여유로운 똑똑이 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
-    //imgPath: image.userC,
   }, //QB-type
 };
 let D_Page: Type = {
@@ -567,9 +793,12 @@ let D_Page: Type = {
   message: 'typePage_D 정상 반환',
   pages: [
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_D[type_D_level - default_level].Bucket,
+        Key: params_D[type_D_level - default_level].Key,
+      }),
       level: type_D_level++,
       depth: 0,
-      //imgpath: image.userD,
       questionType: 'Button_Selector',
       questionID: 'Q-D-1',
       questionTitle: '나는', //해당 질문제목
@@ -582,9 +811,12 @@ let D_Page: Type = {
       nextpage: 'Q-D-2',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_D[type_D_level - default_level].Bucket,
+        Key: params_D[type_D_level - default_level].Key,
+      }),
       level: type_D_level,
       depth: 0,
-      //imgpath: image.userD,
       questionType: 'Hybrid_Type',
       questionID: 'Q-D-2',
       questionTitle_First: '나는',
@@ -601,9 +833,12 @@ let D_Page: Type = {
       nextpage: 'Q-D-2-1',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_D[type_D_level - default_level].Bucket,
+        Key: params_D[type_D_level - default_level].Key,
+      }),
       level: type_D_level,
       depth: 1,
-      //imgpath: image.userD,
       questionType: 'Threeline_Picker',
       questionID: 'Q-D-2-1',
       questionTitle_First: '나는',
@@ -614,9 +849,12 @@ let D_Page: Type = {
       nextpage: 'Q-D-2-2',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_D[type_D_level - default_level].Bucket,
+        Key: params_D[type_D_level - default_level].Key,
+      }),
       level: type_D_level,
       depth: 2,
-      //imgpath: image.userD,
       questionType: 'Hybrid_Type',
       questionID: 'Q-D-2-2',
       questionTitle_First: '나는',
@@ -633,9 +871,12 @@ let D_Page: Type = {
       nextpage: 'Q-D-2-3',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_D[type_D_level - default_level].Bucket,
+        Key: params_D[type_D_level - default_level].Key,
+      }),
       level: type_D_level++,
       depth: 3,
-      //imgpath: image.userD,
       questionType: 'Threeline_Picker',
       questionID: 'Q-D-2-3',
       questionTitle_First: '나는',
@@ -646,9 +887,12 @@ let D_Page: Type = {
       nextpage: 'Q-D-3',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_D[type_D_level - default_level].Bucket,
+        Key: params_D[type_D_level - default_level].Key,
+      }),
       level: type_D_level,
       depth: 0,
-      //imgpath: image.userD,
       questionType: 'Button_Selector',
       questionID: 'Q-D-3',
       questionTitle: '나는 난자 냉동을', //해당 질문제목
@@ -663,9 +907,12 @@ let D_Page: Type = {
       nextpage: 'Q-D-3-1',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_D[type_D_level - default_level].Bucket,
+        Key: params_D[type_D_level - default_level].Key,
+      }),
       level: type_D_level++,
       depth: 1,
-      //imgpath: image.userD,
       questionType: 'Threeline_Picker',
       questionID: 'Q-D-3-1',
       questionTitle_First: '나는',
@@ -676,9 +923,12 @@ let D_Page: Type = {
       nextpage: 'Q-D-4',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_D[type_D_level - default_level].Bucket,
+        Key: params_D[type_D_level - default_level].Key,
+      }),
       level: type_D_level++,
       depth: 0,
-      //imgpath: image.userD,
       questionType: 'Button_Selector',
       questionID: 'Q-D-4',
       questionTitle: '나는', //해당 질문제목
@@ -691,9 +941,12 @@ let D_Page: Type = {
       nextpage: 'Q-D-5',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_D[type_D_level - default_level].Bucket,
+        Key: params_D[type_D_level - default_level].Key,
+      }),
       level: type_D_level,
       depth: 0,
-      //imgpath: image.userD,
       questionType: 'Sixline_Picker',
       questionID: 'Q-D-5',
       questionTitle_First: '나의 마지막(최근) 생리일은',
@@ -705,9 +958,12 @@ let D_Page: Type = {
       nextpage: 'Q-D-5-1',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_D[type_D_level - default_level].Bucket,
+        Key: params_D[type_D_level - default_level].Key,
+      }),
       level: type_D_level++,
       depth: 1,
-      //imgpath: image.userD,
       questionType: 'Button_Selector',
       questionID: 'Q-D-5-1',
       questionTitle: '나는 생리일이', //해당 질문제목
@@ -721,10 +977,13 @@ let D_Page: Type = {
     },
   ],
   result: {
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_D[type_D_level - default_level].Bucket,
+      Key: params_D[type_D_level - default_level].Key,
+    }),
     questionId: 'QD_Type',
     title: '여유로운 똑똑이 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
-    //imgPath: image.userD,
   }, //QD-type
 };
 let E_Page: Type = {
@@ -733,9 +992,12 @@ let E_Page: Type = {
   message: 'typePage_E 정상 반환',
   pages: [
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_E[type_E_level - default_level].Bucket,
+        Key: params_E[type_E_level - default_level].Key,
+      }),
       level: type_E_level++,
       depth: 0,
-      //imgpath: image.userE,
       questionType: 'Threeline_Picker',
       questionID: 'Q-E-1',
       questionTitle_First: '나는',
@@ -746,9 +1008,12 @@ let E_Page: Type = {
       nextpage: 'Q-E-2',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_E[type_E_level - default_level].Bucket,
+        Key: params_E[type_E_level - default_level].Key,
+      }),
       level: type_E_level,
       depth: 0,
-      //imgpath: image.userE,
       questionType: 'Button_Selector',
       questionID: 'Q-E-2',
       questionTitle: '나는', //해당 질문제목
@@ -761,9 +1026,12 @@ let E_Page: Type = {
       nextpage: 'Q-E-2-1',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_E[type_E_level - default_level].Bucket,
+        Key: params_E[type_E_level - default_level].Key,
+      }),
       level: type_E_level,
       depth: 1,
-      //imgpath: image.userE,
       questionType: 'Button_Selector',
       questionID: 'Q-E-2-1',
       questionTitle: '나는', //해당 질문제목
@@ -777,9 +1045,12 @@ let E_Page: Type = {
       nextpage: 'Q-E-2-2',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_E[type_E_level - default_level].Bucket,
+        Key: params_E[type_E_level - default_level].Key,
+      }),
       level: type_E_level,
       depth: 2,
-      //imgpath: image.userE,
       questionType: 'Threeline_Picker',
       questionID: 'Q-E-2-2',
       questionTitle_First: '나는',
@@ -790,9 +1061,12 @@ let E_Page: Type = {
       nextpage: 'Q-E-2-3',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_E[type_E_level - default_level].Bucket,
+        Key: params_E[type_E_level - default_level].Key,
+      }),
       level: type_E_level++,
       depth: 3,
-      //imgpath: image.userE,
       questionType: 'Threeline_Picker',
       questionID: 'Q-E-2-3',
       questionTitle_First: '나는',
@@ -803,9 +1077,12 @@ let E_Page: Type = {
       nextpage: 'Q-E-3',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_E[type_E_level - default_level].Bucket,
+        Key: params_E[type_E_level - default_level].Key,
+      }),
       level: type_E_level,
       depth: 0,
-      //imgpath: image.userE,
       questionType: 'Button_Selector',
       questionID: 'Q-E-3',
       questionTitle: '나는 난자 냉동을', //해당 질문제목
@@ -820,9 +1097,12 @@ let E_Page: Type = {
       nextpage: 'Q-E-3-1',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_E[type_E_level - default_level].Bucket,
+        Key: params_E[type_E_level - default_level].Key,
+      }),
       level: type_E_level++,
       depth: 1,
-      //imgpath: image.userC,
       questionType: 'Threeline_Picker',
       questionID: 'Q-E-3-1',
       questionTitle_First: '나는',
@@ -833,9 +1113,12 @@ let E_Page: Type = {
       nextpage: 'Q-E-4',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_E[type_E_level - default_level].Bucket,
+        Key: params_E[type_E_level - default_level].Key,
+      }),
       level: type_E_level,
       depth: 0,
-      //imgpath: image.userE,
       questionType: 'Sixline_Picker',
       questionID: 'Q-E-4',
       questionTitle_First: '나의 마지막(최근) 생리일은',
@@ -847,9 +1130,12 @@ let E_Page: Type = {
       nextpage: 'Q-E-4-1',
     },
     {
+      imgpath: s3.getSignedUrl('getObject', {
+        Bucket: params_E[type_E_level - default_level].Bucket,
+        Key: params_E[type_E_level - default_level].Key,
+      }),
       level: type_E_level++,
       depth: 1,
-      //imgpath: image.userE,
       questionType: 'Button_Selector',
       questionID: 'Q-E-4-1',
       questionTitle: '나는 생리일이', //해당 질문제목
@@ -863,10 +1149,13 @@ let E_Page: Type = {
     },
   ],
   result: {
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_E[type_E_level - default_level].Bucket,
+      Key: params_E[type_E_level - default_level].Key,
+    }),
     questionId: 'QE_Type',
     title: '여유로운 똑똑이 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
-    //imgPath: image.userE,
   }, //QE-type
 };
 app.get('/defaultPage', (req: express.Request, res: express.Response) => {
@@ -1321,6 +1610,7 @@ app.post('/typePage/:type', (req: express.Request, res: express.Response) => {
 app.put('/defaultPage', (req: express.Request, res: express.Response) => {
   const find_level = req.body.level;
   const q_type = req.body.questionType;
+
   if (typeof find_level !== 'undefined') {
     default_page.pages.splice(find_level - 1, 1);
     if (q_type == 'Threeline_Picker') {
@@ -1380,11 +1670,13 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
   if (typeof find_level != 'undefined') {
     if (user_type === 'A') {
       let index = A_Page.pages.findIndex((item) => item.level === find_level && item.depth === find_depth);
+      const img_path = A_Page.pages[index].imgpath;
       A_Page.pages.splice(index, 1);
       if (q_type == 'Threeline_Picker') {
         const type_A_info = {
           level: find_level,
           depth: find_depth,
+          imgpath: img_path,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1399,6 +1691,7 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
         const type_A_info = {
           level: find_level,
           depth: find_depth,
+          imgpath: img_path,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle: req.body.questionTitle,
@@ -1411,6 +1704,7 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
         let A_info = {
           level: find_level,
           depth: find_depth,
+          imgpath: img_path,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1431,11 +1725,13 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
       });
     } else if (user_type === 'B') {
       let index = B_Page.pages.findIndex((item) => item.level === find_level && item.depth === find_depth);
+      const img_path = B_Page.pages[index].imgpath;
       B_Page.pages.splice(index, 1);
       if (q_type == 'Threeline_Picker') {
         const type_B_info = {
           level: find_level,
           depth: find_depth,
+          imgpath: img_path,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1450,6 +1746,7 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
         const type_B_info = {
           level: find_level,
           depth: find_depth,
+          imgpath: img_path,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle: req.body.questionTitle,
@@ -1462,6 +1759,7 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
         let B_info = {
           level: find_level,
           depth: find_depth,
+          imgpath: img_path,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1482,11 +1780,13 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
       });
     } else if (user_type === 'C') {
       let index = C_Page.pages.findIndex((item) => item.level === find_level && item.depth === find_depth);
+      const img_path = C_Page.pages[index].imgpath;
       C_Page.pages.splice(index, 1);
       if (q_type == 'Threeline_Picker') {
         const type_C_info = {
           level: find_level,
           depth: find_depth,
+          imgpath: img_path,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1501,6 +1801,7 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
         const type_C_info = {
           level: find_level,
           depth: find_depth,
+          imgpath: img_path,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle: req.body.questionTitle,
@@ -1513,6 +1814,7 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
         let C_info = {
           level: find_level,
           depth: find_depth,
+          imgpath: img_path,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1533,11 +1835,13 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
       });
     } else if (user_type === 'D') {
       let index = D_Page.pages.findIndex((item) => item.level === find_level && item.depth === find_depth);
+      const img_path = D_Page.pages[index].imgpath;
       D_Page.pages.splice(index, 1);
       if (q_type == 'Threeline_Picker') {
         const type_D_info = {
           level: find_level,
           depth: find_depth,
+          imgpath: img_path,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1552,6 +1856,7 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
         const type_D_info = {
           level: find_level,
           depth: find_depth,
+          imgpath: img_path,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle: req.body.questionTitle,
@@ -1564,6 +1869,7 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
         let D_info = {
           level: find_level,
           depth: find_depth,
+          imgpath: img_path,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1584,11 +1890,13 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
       });
     } else if (user_type === 'E') {
       let index = E_Page.pages.findIndex((item) => item.level === find_level && item.depth === find_depth);
+      const img_path = E_Page.pages[index].imgpath;
       E_Page.pages.splice(index, 1);
       if (q_type == 'Threeline_Picker') {
         const type_E_info = {
           level: find_level,
           depth: find_depth,
+          imgpath: img_path,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
@@ -1603,6 +1911,7 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
         const type_E_info = {
           level: find_level,
           depth: find_depth,
+          imgpath: img_path,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle: req.body.questionTitle,
@@ -1615,6 +1924,7 @@ app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
         let E_info = {
           level: find_level,
           depth: find_depth,
+          imgpath: img_path,
           questionType: q_type,
           questionID: req.body.questionID,
           questionTitle_First: req.body.questionTitle_First,
