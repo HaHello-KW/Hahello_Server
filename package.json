@@ -36,7 +36,8 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "aws-sdk": "^2.1290.0",
+    "@aws-sdk/client-s3": "^3.279.0",
+    "aws-sdk": "^2.1323.0",
     "axios": "^1.2.2",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
@@ -44,6 +45,7 @@
     "dayjs": "^1.11.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "fs": "^0.0.1-security",
     "helmet": "^6.0.0",
     "hpp": "^0.2.3",
     "id-auto-increment": "^1.0.1",
