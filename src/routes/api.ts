@@ -1107,7 +1107,1080 @@ app.get('/typePage/:type', (req: express.Request, res: express.Response) => {
     res.send(E_Page);
   }
 });
+app.post('/defaultPage', (req: express.Request, res: express.Response) => {
+  const q_type = req.body.questionType;
+  const new_id = req.body.id;
+  let new_level = 0;
+  default_page.forEach((item) => {
+    if (item.id >= new_id) {
+      if (item.id == new_id) {
+        new_level = item.pgLevel;
+      }
+      item.id++;
+      item.pgLevel++;
+    }
+  });
+  if (q_type == 'Threeline_Picker') {
+    let default_info: typePageModel = {
+      pagename: req.body.pagename,
+      id: new_id,
+      pgLevel: new_level,
+      questionType: q_type,
+      questionTxt: null,
+      selectionTxt: null,
+      firstPickerType: req.body.firstPickerType,
+      firstlineTxt: req.body.firstlineTxt,
+      secondPickerType: req.body.secondPickerType,
+      secondlineTxt: req.body.secondlineTxt,
+      thirdPickerType: req.body.thirdPickerType,
+      thirdlineTxt: req.body.thirdlineTxt,
+    };
+    default_page = default_page.concat(default_info);
+  } else if (q_type == 'Button_Selector') {
+    let default_info: typePageModel = {
+      pagename: req.body.pagename,
+      id: new_id,
+      pgLevel: new_level,
+      questionType: q_type,
+      questionTxt: req.body.questionTxt,
+      selectionTxt: req.body.selectionTxt,
+      firstPickerType: null,
+      firstlineTxt: null,
+      secondPickerType: null,
+      secondlineTxt: null,
+      thirdPickerType: null,
+      thirdlineTxt: null,
+    };
+    default_page = default_page.concat(default_info);
+  } else if (q_type == 'Sixline_Picker') {
+    let default_info: typePageModel = {
+      pagename: req.body.pagename,
+      id: new_id,
+      pgLevel: new_level,
+      questionType: req.body.questionType,
+      questionTxt: null,
+      selectionTxt: null,
+      firstPickerType: req.body.firstPickerType,
+      firstlineTxt: req.body.firstlineTxt,
+      secondPickerType: req.body.secondPickerType,
+      secondlineTxt: req.body.secondlineTxt,
+      thirdPickerType: req.body.thirdPickerType,
+      thirdlineTxt: req.body.thirdlineTxt,
+    };
+    default_page = default_page.concat(default_info);
+  }
+  default_page.sort(function (a, b) {
+    return a.id - b.id;
+  });
+  default_id++;
+  default_level++;
+  A_Page.forEach((item) => {
+    item.id++;
+    item.pgLevel++;
+  });
+  type_A_id++;
+  type_A_level++;
+  B_Page.forEach((item) => {
+    item.id++;
+    item.pgLevel++;
+  });
+  type_B_id++;
+  type_B_level++;
+  C_Page.forEach((item) => {
+    item.id++;
+    item.pgLevel++;
+  });
+  type_C_id++;
+  type_C_level++;
+  D_Page.forEach((item) => {
+    item.id++;
+    item.pgLevel++;
+  });
+  type_D_id++;
+  type_D_level++;
+  E_Page.forEach((item) => {
+    item.id++;
+    item.pgLevel++;
+  });
+  type_E_id++;
+  type_E_level++;
+  res.redirect('/defaultPage');
+});
 
+app.post('/typePage/:type', (req: express.Request, res: express.Response) => {
+  const user_type = req.params.type;
+  const q_type = req.body.questionType;
+  const new_id = req.body.id;
+  let new_imgpath: any = '';
+  let new_level = 0;
+  if (user_type === 'A') {
+    A_Page.forEach((item) => {
+      if (item.id >= new_id) {
+        if (item.id === new_id) {
+          new_level = item.pgLevel;
+          new_imgpath = item.imgpath;
+        }
+        item.id++;
+      }
+      // item.pgLevel++;
+    });
+    let pgLevel_cnt = 0;
+    A_Page.forEach((item) => {
+      if (new_level == item.pgLevel) pgLevel_cnt++;
+    });
+    if (pgLevel_cnt == 1) {
+      A_Page.forEach((item) => {
+        if (item.pgLevel >= new_level) item.pgLevel++;
+      });
+      type_A_level++;
+    }
+    if (q_type == 'Threeline_Picker') {
+      let A_info = {
+        imgpath: new_imgpath,
+        pagename: req.body.pagename,
+        id: new_id,
+        pgLevel: new_level,
+        questionType: q_type,
+        questionTxt: null,
+        selectionTxt: null,
+        firstPickerType: req.body.firstPickerType,
+        firstlineTxt: req.body.firstlineTxt,
+        secondPickerType: req.body.secondPickerType,
+        secondlineTxt: req.body.secondlineTxt,
+        thirdPickerType: req.body.thirdPickerType,
+        thirdlineTxt: req.body.thirdlineTxt,
+      };
+      A_Page = A_Page.concat(A_info);
+    } else if (q_type == 'Button_Selector') {
+      let A_info = {
+        imgpath: new_imgpath,
+        pagename: req.body.pagename,
+        id: new_id,
+        pgLevel: new_level,
+        questionType: q_type,
+        questionTxt: req.body.questionTxt,
+        selectionTxt: req.body.selectionTxt,
+        firstPickerType: null,
+        firstlineTxt: null,
+        secondPickerType: null,
+        secondlineTxt: null,
+        thirdPickerType: null,
+        thirdlineTxt: null,
+      };
+      A_Page = A_Page.concat(A_info);
+    } else if (q_type == 'Sixline_Picker') {
+      let A_info = {
+        imgpath: new_imgpath,
+        pagename: req.body.pagename,
+        id: new_id,
+        pgLevel: new_level,
+        questionType: req.body.questionType,
+        questionTxt: null,
+        selectionTxt: null,
+        firstPickerType: req.body.firstPickerType,
+        firstlineTxt: req.body.firstlineTxt,
+        secondPickerType: req.body.secondPickerType,
+        secondlineTxt: req.body.secondlineTxt,
+        thirdPickerType: req.body.thirdPickerType,
+        thirdlineTxt: req.body.thirdlineTxt,
+      };
+      A_Page = A_Page.concat(A_info);
+    }
+    A_Page.sort(function (a, b) {
+      return a.id - b.id;
+    });
+    type_A_id++;
+  } else if (user_type === 'B') {
+    B_Page.forEach((item) => {
+      if (item.id >= new_id) {
+        if (item.id === new_id) {
+          new_level = item.pgLevel;
+          new_imgpath = item.imgpath;
+        }
+        item.id++;
+      }
+      // item.pgLevel++;
+    });
+    let pgLevel_cnt = 0;
+    B_Page.forEach((item) => {
+      if (new_level == item.pgLevel) pgLevel_cnt++;
+    });
+    if (pgLevel_cnt == 1) {
+      B_Page.forEach((item) => {
+        if (item.pgLevel >= new_level) item.pgLevel++;
+      });
+      type_B_level++;
+    }
+    if (q_type == 'Threeline_Picker') {
+      let B_info = {
+        imgpath: new_imgpath,
+        pagename: req.body.pagename,
+        id: new_id,
+        pgLevel: new_level,
+        questionType: q_type,
+        questionTxt: null,
+        selectionTxt: null,
+        firstPickerType: req.body.firstPickerType,
+        firstlineTxt: req.body.firstlineTxt,
+        secondPickerType: req.body.secondPickerType,
+        secondlineTxt: req.body.secondlineTxt,
+        thirdPickerType: req.body.thirdPickerType,
+        thirdlineTxt: req.body.thirdlineTxt,
+      };
+      B_Page = B_Page.concat(B_info);
+    } else if (q_type == 'Button_Selector') {
+      let B_info = {
+        imgpath: new_imgpath,
+        pagename: req.body.pagename,
+        id: new_id,
+        pgLevel: new_level,
+        questionType: q_type,
+        questionTxt: req.body.questionTxt,
+        selectionTxt: req.body.selectionTxt,
+        firstPickerType: null,
+        firstlineTxt: null,
+        secondPickerType: null,
+        secondlineTxt: null,
+        thirdPickerType: null,
+        thirdlineTxt: null,
+      };
+      B_Page = B_Page.concat(B_info);
+    } else if (q_type == 'Sixline_Picker') {
+      let B_info = {
+        imgpath: new_imgpath,
+        pagename: req.body.pagename,
+        id: new_id,
+        pgLevel: new_level,
+        questionType: req.body.questionType,
+        questionTxt: null,
+        selectionTxt: null,
+        firstPickerType: req.body.firstPickerType,
+        firstlineTxt: req.body.firstlineTxt,
+        secondPickerType: req.body.secondPickerType,
+        secondlineTxt: req.body.secondlineTxt,
+        thirdPickerType: req.body.thirdPickerType,
+        thirdlineTxt: req.body.thirdlineTxt,
+      };
+      B_Page = B_Page.concat(B_info);
+    }
+    B_Page.sort(function (a, b) {
+      return a.id - b.id;
+    });
+    type_B_id++;
+  } else if (user_type === 'C') {
+    C_Page.forEach((item) => {
+      if (item.id >= new_id) {
+        if (item.id === new_id) {
+          new_level = item.pgLevel;
+          new_imgpath = item.imgpath;
+        }
+        item.id++;
+      }
+      // item.pgLevel++;
+    });
+    let pgLevel_cnt = 0;
+    C_Page.forEach((item) => {
+      if (new_level == item.pgLevel) pgLevel_cnt++;
+    });
+    if (pgLevel_cnt == 1) {
+      C_Page.forEach((item) => {
+        if (item.pgLevel >= new_level) item.pgLevel++;
+      });
+      type_C_level++;
+    }
+    if (q_type == 'Threeline_Picker') {
+      let C_info = {
+        imgpath: new_imgpath,
+        pagename: req.body.pagename,
+        id: new_id,
+        pgLevel: new_level,
+        questionType: q_type,
+        questionTxt: null,
+        selectionTxt: null,
+        firstPickerType: req.body.firstPickerType,
+        firstlineTxt: req.body.firstlineTxt,
+        secondPickerType: req.body.secondPickerType,
+        secondlineTxt: req.body.secondlineTxt,
+        thirdPickerType: req.body.thirdPickerType,
+        thirdlineTxt: req.body.thirdlineTxt,
+      };
+      C_Page = C_Page.concat(C_info);
+    } else if (q_type == 'Button_Selector') {
+      let C_info = {
+        imgpath: new_imgpath,
+        pagename: req.body.pagename,
+        id: new_id,
+        pgLevel: new_level,
+        questionType: q_type,
+        questionTxt: req.body.questionTxt,
+        selectionTxt: req.body.selectionTxt,
+        firstPickerType: null,
+        firstlineTxt: null,
+        secondPickerType: null,
+        secondlineTxt: null,
+        thirdPickerType: null,
+        thirdlineTxt: null,
+      };
+      C_Page = C_Page.concat(C_info);
+    } else if (q_type == 'Sixline_Picker') {
+      let C_info = {
+        imgpath: new_imgpath,
+        pagename: req.body.pagename,
+        id: new_id,
+        pgLevel: new_level,
+        questionType: req.body.questionType,
+        questionTxt: null,
+        selectionTxt: null,
+        firstPickerType: req.body.firstPickerType,
+        firstlineTxt: req.body.firstlineTxt,
+        secondPickerType: req.body.secondPickerType,
+        secondlineTxt: req.body.secondlineTxt,
+        thirdPickerType: req.body.thirdPickerType,
+        thirdlineTxt: req.body.thirdlineTxt,
+      };
+      C_Page = C_Page.concat(C_info);
+    }
+    B_Page.sort(function (a, b) {
+      return a.id - b.id;
+    });
+    type_C_id++;
+  } else if (user_type === 'D') {
+    D_Page.forEach((item) => {
+      if (item.id >= new_id) {
+        if (item.id === new_id) {
+          new_level = item.pgLevel;
+          new_imgpath = item.imgpath;
+        }
+        item.id++;
+      }
+      // item.pgLevel++;
+    });
+    let pgLevel_cnt = 0;
+    D_Page.forEach((item) => {
+      if (new_level == item.pgLevel) pgLevel_cnt++;
+    });
+    if (pgLevel_cnt == 1) {
+      D_Page.forEach((item) => {
+        if (item.pgLevel >= new_level) item.pgLevel++;
+      });
+      type_D_level++;
+    }
+    if (q_type == 'Threeline_Picker') {
+      let D_info = {
+        imgpath: new_imgpath,
+        pagename: req.body.pagename,
+        id: new_id,
+        pgLevel: new_level,
+        questionType: q_type,
+        questionTxt: null,
+        selectionTxt: null,
+        firstPickerType: req.body.firstPickerType,
+        firstlineTxt: req.body.firstlineTxt,
+        secondPickerType: req.body.secondPickerType,
+        secondlineTxt: req.body.secondlineTxt,
+        thirdPickerType: req.body.thirdPickerType,
+        thirdlineTxt: req.body.thirdlineTxt,
+      };
+      D_Page = D_Page.concat(D_info);
+    } else if (q_type == 'Button_Selector') {
+      let D_info = {
+        imgpath: new_imgpath,
+        pagename: req.body.pagename,
+        id: new_id,
+        pgLevel: new_level,
+        questionType: q_type,
+        questionTxt: req.body.questionTxt,
+        selectionTxt: req.body.selectionTxt,
+        firstPickerType: null,
+        firstlineTxt: null,
+        secondPickerType: null,
+        secondlineTxt: null,
+        thirdPickerType: null,
+        thirdlineTxt: null,
+      };
+      D_Page = D_Page.concat(D_info);
+    } else if (q_type == 'Sixline_Picker') {
+      let D_info = {
+        imgpath: new_imgpath,
+        pagename: req.body.pagename,
+        id: new_id,
+        pgLevel: new_level,
+        questionType: req.body.questionType,
+        questionTxt: null,
+        selectionTxt: null,
+        firstPickerType: req.body.firstPickerType,
+        firstlineTxt: req.body.firstlineTxt,
+        secondPickerType: req.body.secondPickerType,
+        secondlineTxt: req.body.secondlineTxt,
+        thirdPickerType: req.body.thirdPickerType,
+        thirdlineTxt: req.body.thirdlineTxt,
+      };
+      D_Page = D_Page.concat(D_info);
+    }
+    D_Page.sort(function (a, b) {
+      return a.id - b.id;
+    });
+    type_D_id++;
+  } else if (user_type === 'E') {
+    E_Page.forEach((item) => {
+      if (item.id >= new_id) {
+        if (item.id === new_id) {
+          new_level = item.pgLevel;
+          new_imgpath = item.imgpath;
+        }
+        item.id++;
+      }
+      // item.pgLevel++;
+    });
+    let pgLevel_cnt = 0;
+    E_Page.forEach((item) => {
+      if (new_level == item.pgLevel) pgLevel_cnt++;
+    });
+    if (pgLevel_cnt == 1) {
+      E_Page.forEach((item) => {
+        if (item.pgLevel >= new_level) item.pgLevel++;
+      });
+      type_E_level++;
+    }
+    if (q_type == 'Threeline_Picker') {
+      let E_info = {
+        imgpath: new_imgpath,
+        pagename: req.body.pagename,
+        id: new_id,
+        pgLevel: new_level,
+        questionType: q_type,
+        questionTxt: null,
+        selectionTxt: null,
+        firstPickerType: req.body.firstPickerType,
+        firstlineTxt: req.body.firstlineTxt,
+        secondPickerType: req.body.secondPickerType,
+        secondlineTxt: req.body.secondlineTxt,
+        thirdPickerType: req.body.thirdPickerType,
+        thirdlineTxt: req.body.thirdlineTxt,
+      };
+      E_Page = E_Page.concat(E_info);
+    } else if (q_type == 'Button_Selector') {
+      let E_info = {
+        imgpath: new_imgpath,
+        pagename: req.body.pagename,
+        id: new_id,
+        pgLevel: new_level,
+        questionType: q_type,
+        questionTxt: req.body.questionTxt,
+        selectionTxt: req.body.selectionTxt,
+        firstPickerType: null,
+        firstlineTxt: null,
+        secondPickerType: null,
+        secondlineTxt: null,
+        thirdPickerType: null,
+        thirdlineTxt: null,
+      };
+      E_Page = E_Page.concat(E_info);
+    } else if (q_type == 'Sixline_Picker') {
+      let E_info = {
+        imgpath: new_imgpath,
+        pagename: req.body.pagename,
+        id: new_id,
+        pgLevel: new_level,
+        questionType: req.body.questionType,
+        questionTxt: null,
+        selectionTxt: null,
+        firstPickerType: req.body.firstPickerType,
+        firstlineTxt: req.body.firstlineTxt,
+        secondPickerType: req.body.secondPickerType,
+        secondlineTxt: req.body.secondlineTxt,
+        thirdPickerType: req.body.thirdPickerType,
+        thirdlineTxt: req.body.thirdlineTxt,
+      };
+      E_Page = E_Page.concat(E_info);
+    }
+    E_Page.sort(function (a, b) {
+      return a.id - b.id;
+    });
+    type_E_id++;
+  }
+  res.redirect('/typePage/' + user_type);
+});
+
+app.put('/defaultPage', (req: express.Request, res: express.Response) => {
+  const find_id = req.body.id;
+  const q_type = req.body.questionType;
+  let new_level = 0;
+  if (typeof find_id !== 'undefined') {
+    default_page.forEach((item) => {
+      if (item.id == find_id) {
+        new_level = item.pgLevel;
+      }
+    });
+    default_page.splice(find_id, 1);
+    if (q_type == 'Threeline_Picker') {
+      let default_info: typePageModel = {
+        pagename: req.body.pagename,
+        id: find_id,
+        pgLevel: new_level,
+        questionType: q_type,
+        questionTxt: null,
+        selectionTxt: null,
+        firstPickerType: req.body.firstPickerType,
+        firstlineTxt: req.body.firstlineTxt,
+        secondPickerType: req.body.secondPickerType,
+        secondlineTxt: req.body.secondlineTxt,
+        thirdPickerType: req.body.thirdPickerType,
+        thirdlineTxt: req.body.thirdlineTxt,
+      };
+      default_page = default_page.concat(default_info);
+    } else if (q_type == 'Button_Selector') {
+      let default_info: typePageModel = {
+        pagename: req.body.pagename,
+        id: find_id,
+        pgLevel: new_level,
+        questionType: q_type,
+        questionTxt: req.body.questionTxt,
+        selectionTxt: req.body.selectionTxt,
+        firstPickerType: null,
+        firstlineTxt: null,
+        secondPickerType: null,
+        secondlineTxt: null,
+        thirdPickerType: null,
+        thirdlineTxt: null,
+      };
+      default_page = default_page.concat(default_info);
+    } else if (q_type == 'Sixline_Picker') {
+      let default_info: typePageModel = {
+        pagename: req.body.pagename,
+        id: find_id,
+        pgLevel: new_level,
+        questionType: req.body.questionType,
+        questionTxt: null,
+        selectionTxt: null,
+        firstPickerType: req.body.firstPickerType,
+        firstlineTxt: req.body.firstlineTxt,
+        secondPickerType: req.body.secondPickerType,
+        secondlineTxt: req.body.secondlineTxt,
+        thirdPickerType: req.body.thirdPickerType,
+        thirdlineTxt: req.body.thirdlineTxt,
+      };
+      default_page = default_page.concat(default_info);
+    }
+    default_page.sort(function (a, b) {
+      return a.id - b.id;
+    });
+  }
+  res.redirect('/defaultPage');
+});
+
+app.put('/typePage/:type', (req: express.Request, res: express.Response) => {
+  const user_type = req.params.type;
+  let find_id = req.body.id;
+  const q_type = req.body.questionType;
+  let new_imgpath: any = '';
+  let new_level = 0;
+  if (typeof find_id != 'undefined') {
+    if (user_type === 'A') {
+      A_Page.forEach((item) => {
+        if (item.pgLevel == find_id) {
+          new_level = item.pgLevel;
+          new_imgpath = item.imgpath;
+        }
+      });
+      A_Page.splice(find_id - default_id, 1);
+      if (q_type == 'Threeline_Picker') {
+        let A_info = {
+          imgpath: new_imgpath,
+          pagename: req.body.pagename,
+          id: find_id,
+          pgLevel: new_level,
+          questionType: q_type,
+          questionTxt: null,
+          selectionTxt: null,
+          firstPickerType: req.body.firstPickerType,
+          firstlineTxt: req.body.firstlineTxt,
+          secondPickerType: req.body.secondPickerType,
+          secondlineTxt: req.body.secondlineTxt,
+          thirdPickerType: req.body.thirdPickerType,
+          thirdlineTxt: req.body.thirdlineTxt,
+        };
+        A_Page = A_Page.concat(A_info);
+      } else if (q_type == 'Button_Selector') {
+        let A_info = {
+          imgpath: new_imgpath,
+          pagename: req.body.pagename,
+          id: find_id,
+          pgLevel: new_level,
+          questionType: q_type,
+          questionTxt: req.body.questionTxt,
+          selectionTxt: req.body.selectionTxt,
+          firstPickerType: null,
+          firstlineTxt: null,
+          secondPickerType: null,
+          secondlineTxt: null,
+          thirdPickerType: null,
+          thirdlineTxt: null,
+        };
+        A_Page = A_Page.concat(A_info);
+      } else if (q_type == 'Sixline_Picker') {
+        let A_info = {
+          imgpath: new_imgpath,
+          pagename: req.body.pagename,
+          id: find_id,
+          pgLevel: new_level,
+          questionType: req.body.questionType,
+          questionTxt: null,
+          selectionTxt: null,
+          firstPickerType: req.body.firstPickerType,
+          firstlineTxt: req.body.firstlineTxt,
+          secondPickerType: req.body.secondPickerType,
+          secondlineTxt: req.body.secondlineTxt,
+          thirdPickerType: req.body.thirdPickerType,
+          thirdlineTxt: req.body.thirdlineTxt,
+        };
+        A_Page = A_Page.concat(A_info);
+      }
+      A_Page.sort(function (a, b) {
+        return a.id - b.id;
+      });
+    } else if (user_type === 'B') {
+      B_Page.forEach((item) => {
+        if (item.pgLevel == find_id) {
+          new_level = item.pgLevel;
+          new_imgpath = item.imgpath;
+        }
+      });
+      B_Page.splice(find_id - default_id, 1);
+      if (q_type == 'Threeline_Picker') {
+        let B_info = {
+          imgpath: new_imgpath,
+          pagename: req.body.pagename,
+          id: find_id,
+          pgLevel: new_level,
+          questionType: q_type,
+          questionTxt: null,
+          selectionTxt: null,
+          firstPickerType: req.body.firstPickerType,
+          firstlineTxt: req.body.firstlineTxt,
+          secondPickerType: req.body.secondPickerType,
+          secondlineTxt: req.body.secondlineTxt,
+          thirdPickerType: req.body.thirdPickerType,
+          thirdlineTxt: req.body.thirdlineTxt,
+        };
+        B_Page = B_Page.concat(B_info);
+      } else if (q_type == 'Button_Selector') {
+        let B_info = {
+          imgpath: new_imgpath,
+          pagename: req.body.pagename,
+          id: find_id,
+          pgLevel: new_level,
+          questionType: q_type,
+          questionTxt: req.body.questionTxt,
+          selectionTxt: req.body.selectionTxt,
+          firstPickerType: null,
+          firstlineTxt: null,
+          secondPickerType: null,
+          secondlineTxt: null,
+          thirdPickerType: null,
+          thirdlineTxt: null,
+        };
+        B_Page = B_Page.concat(B_info);
+      } else if (q_type == 'Sixline_Picker') {
+        let B_info = {
+          imgpath: new_imgpath,
+          pagename: req.body.pagename,
+          id: find_id,
+          pgLevel: new_level,
+          questionType: req.body.questionType,
+          questionTxt: null,
+          selectionTxt: null,
+          firstPickerType: req.body.firstPickerType,
+          firstlineTxt: req.body.firstlineTxt,
+          secondPickerType: req.body.secondPickerType,
+          secondlineTxt: req.body.secondlineTxt,
+          thirdPickerType: req.body.thirdPickerType,
+          thirdlineTxt: req.body.thirdlineTxt,
+        };
+        B_Page = B_Page.concat(B_info);
+      }
+      B_Page.sort(function (a, b) {
+        return a.id - b.id;
+      });
+    } else if (user_type === 'C') {
+      C_Page.forEach((item) => {
+        if (item.pgLevel == find_id) {
+          new_level = item.pgLevel;
+          new_imgpath = item.imgpath;
+        }
+      });
+      C_Page.splice(find_id - default_id, 1);
+      if (q_type == 'Threeline_Picker') {
+        let C_info = {
+          imgpath: new_imgpath,
+          pagename: req.body.pagename,
+          id: find_id,
+          pgLevel: new_level,
+          questionType: q_type,
+          questionTxt: null,
+          selectionTxt: null,
+          firstPickerType: req.body.firstPickerType,
+          firstlineTxt: req.body.firstlineTxt,
+          secondPickerType: req.body.secondPickerType,
+          secondlineTxt: req.body.secondlineTxt,
+          thirdPickerType: req.body.thirdPickerType,
+          thirdlineTxt: req.body.thirdlineTxt,
+        };
+        C_Page = C_Page.concat(C_info);
+      } else if (q_type == 'Button_Selector') {
+        let C_info = {
+          imgpath: new_imgpath,
+          pagename: req.body.pagename,
+          id: find_id,
+          pgLevel: new_level,
+          questionType: q_type,
+          questionTxt: req.body.questionTxt,
+          selectionTxt: req.body.selectionTxt,
+          firstPickerType: null,
+          firstlineTxt: null,
+          secondPickerType: null,
+          secondlineTxt: null,
+          thirdPickerType: null,
+          thirdlineTxt: null,
+        };
+        C_Page = C_Page.concat(C_info);
+      } else if (q_type == 'Sixline_Picker') {
+        let C_info = {
+          imgpath: new_imgpath,
+          pagename: req.body.pagename,
+          id: find_id,
+          pgLevel: new_level,
+          questionType: req.body.questionType,
+          questionTxt: null,
+          selectionTxt: null,
+          firstPickerType: req.body.firstPickerType,
+          firstlineTxt: req.body.firstlineTxt,
+          secondPickerType: req.body.secondPickerType,
+          secondlineTxt: req.body.secondlineTxt,
+          thirdPickerType: req.body.thirdPickerType,
+          thirdlineTxt: req.body.thirdlineTxt,
+        };
+        C_Page = C_Page.concat(C_info);
+      }
+      C_Page.sort(function (a, b) {
+        return a.id - b.id;
+      });
+    } else if (user_type === 'D') {
+      D_Page.forEach((item) => {
+        if (item.pgLevel == find_id) {
+          new_level = item.pgLevel;
+          new_imgpath = item.imgpath;
+        }
+      });
+      D_Page.splice(find_id - default_id, 1);
+      if (q_type == 'Threeline_Picker') {
+        let D_info = {
+          imgpath: new_imgpath,
+          pagename: req.body.pagename,
+          id: find_id,
+          pgLevel: new_level,
+          questionType: q_type,
+          questionTxt: null,
+          selectionTxt: null,
+          firstPickerType: req.body.firstPickerType,
+          firstlineTxt: req.body.firstlineTxt,
+          secondPickerType: req.body.secondPickerType,
+          secondlineTxt: req.body.secondlineTxt,
+          thirdPickerType: req.body.thirdPickerType,
+          thirdlineTxt: req.body.thirdlineTxt,
+        };
+        D_Page = D_Page.concat(D_info);
+      } else if (q_type == 'Button_Selector') {
+        let D_info = {
+          imgpath: new_imgpath,
+          pagename: req.body.pagename,
+          id: find_id,
+          pgLevel: new_level,
+          questionType: q_type,
+          questionTxt: req.body.questionTxt,
+          selectionTxt: req.body.selectionTxt,
+          firstPickerType: null,
+          firstlineTxt: null,
+          secondPickerType: null,
+          secondlineTxt: null,
+          thirdPickerType: null,
+          thirdlineTxt: null,
+        };
+        D_Page = D_Page.concat(D_info);
+      } else if (q_type == 'Sixline_Picker') {
+        let D_info = {
+          imgpath: new_imgpath,
+          pagename: req.body.pagename,
+          id: find_id,
+          pgLevel: new_level,
+          questionType: req.body.questionType,
+          questionTxt: null,
+          selectionTxt: null,
+          firstPickerType: req.body.firstPickerType,
+          firstlineTxt: req.body.firstlineTxt,
+          secondPickerType: req.body.secondPickerType,
+          secondlineTxt: req.body.secondlineTxt,
+          thirdPickerType: req.body.thirdPickerType,
+          thirdlineTxt: req.body.thirdlineTxt,
+        };
+        D_Page = D_Page.concat(D_info);
+      }
+      D_Page.sort(function (a, b) {
+        return a.id - b.id;
+      });
+    } else if (user_type === 'E') {
+      E_Page.forEach((item) => {
+        if (item.pgLevel == find_id) {
+          new_level = item.pgLevel;
+          new_imgpath = item.imgpath;
+        }
+      });
+      E_Page.splice(find_id - default_id, 1);
+      if (q_type == 'Threeline_Picker') {
+        let E_info = {
+          imgpath: new_imgpath,
+          pagename: req.body.pagename,
+          id: find_id,
+          pgLevel: new_level,
+          questionType: q_type,
+          questionTxt: null,
+          selectionTxt: null,
+          firstPickerType: req.body.firstPickerType,
+          firstlineTxt: req.body.firstlineTxt,
+          secondPickerType: req.body.secondPickerType,
+          secondlineTxt: req.body.secondlineTxt,
+          thirdPickerType: req.body.thirdPickerType,
+          thirdlineTxt: req.body.thirdlineTxt,
+        };
+        E_Page = E_Page.concat(E_info);
+      } else if (q_type == 'Button_Selector') {
+        let E_info = {
+          imgpath: new_imgpath,
+          pagename: req.body.pagename,
+          id: find_id,
+          pgLevel: new_level,
+          questionType: q_type,
+          questionTxt: req.body.questionTxt,
+          selectionTxt: req.body.selectionTxt,
+          firstPickerType: null,
+          firstlineTxt: null,
+          secondPickerType: null,
+          secondlineTxt: null,
+          thirdPickerType: null,
+          thirdlineTxt: null,
+        };
+        E_Page = A_Page.concat(E_info);
+      } else if (q_type == 'Sixline_Picker') {
+        let E_info = {
+          imgpath: new_imgpath,
+          pagename: req.body.pagename,
+          id: find_id,
+          pgLevel: new_level,
+          questionType: req.body.questionType,
+          questionTxt: null,
+          selectionTxt: null,
+          firstPickerType: req.body.firstPickerType,
+          firstlineTxt: req.body.firstlineTxt,
+          secondPickerType: req.body.secondPickerType,
+          secondlineTxt: req.body.secondlineTxt,
+          thirdPickerType: req.body.thirdPickerType,
+          thirdlineTxt: req.body.thirdlineTxt,
+        };
+        E_Page = E_Page.concat(E_info);
+      }
+      E_Page.sort(function (a, b) {
+        return a.id - b.id;
+      });
+    }
+  }
+  res.redirect('/typePage/' + user_type);
+});
+
+app.delete('/defaultPage', (req: express.Request, res: express.Response) => {
+  let find_id = req.body.id;
+  if (typeof find_id != 'undefined') {
+    default_page.splice(find_id, 1);
+    default_page.forEach((item) => {
+      if (item.id > find_id) {
+        item.id -= 1;
+        item.pgLevel -= 1;
+      }
+    });
+  }
+  default_level--;
+  A_Page.forEach((item) => {
+    item.id--;
+    item.pgLevel--;
+  });
+  type_A_id--;
+  type_A_level--;
+  B_Page.forEach((item) => {
+    item.id--;
+    item.pgLevel--;
+  });
+  type_B_id--;
+  type_B_level--;
+  C_Page.forEach((item) => {
+    item.id--;
+    item.pgLevel--;
+  });
+  type_C_id--;
+  type_C_level--;
+  D_Page.forEach((item) => {
+    item.id--;
+    item.pgLevel--;
+  });
+  type_D_id--;
+  type_D_level--;
+  E_Page.forEach((item) => {
+    item.id--;
+    item.pgLevel--;
+  });
+  type_E_id--;
+  type_E_level--;
+  res.redirect('/defaultPage');
+});
+
+app.delete('/typePage/:type', (req: express.Request, res: express.Response) => {
+  let user_type = req.params.type;
+  let find_id = req.body.id;
+  let find_level = 0;
+  let find_imgpath: any = '';
+  if (typeof find_id != 'undefined') {
+    if (user_type === 'A') {
+      A_Page.forEach((item) => {
+        if (find_id == item.id) {
+          find_level = item.pgLevel;
+        }
+      });
+      let index = A_Page.findIndex((item) => item.id == find_id);
+      let pgLevel_cnt = 0;
+      A_Page.splice(index, 1);
+      A_Page.forEach((item) => {
+        if (find_level == item.pgLevel) {
+          pgLevel_cnt++;
+        }
+      });
+      A_Page.forEach((item) => {
+        if (item.id > find_id) {
+          item.id--;
+          if (pgLevel_cnt == 0) {
+            item.pgLevel--;
+            item.imgpath = s3.getSignedUrl('getObject', {
+              Bucket: params_A[item.pgLevel - default_level].Bucket,
+              Key: params_A[item.pgLevel - default_level].Key,
+            });
+          }
+        }
+      });
+    } else if (user_type === 'B') {
+      B_Page.forEach((item) => {
+        if (find_id == item.id) {
+          find_level = item.pgLevel;
+        }
+      });
+      let index = B_Page.findIndex((item) => item.id == find_id);
+      let pgLevel_cnt = 0;
+      B_Page.splice(index, 1);
+      B_Page.forEach((item) => {
+        if (find_level == item.pgLevel) {
+          pgLevel_cnt++;
+        }
+      });
+      B_Page.forEach((item) => {
+        if (item.id > find_id) {
+          item.id--;
+          if (pgLevel_cnt == 0) {
+            item.pgLevel--;
+            item.imgpath = s3.getSignedUrl('getObject', {
+              Bucket: params_B[item.pgLevel - default_level].Bucket,
+              Key: params_B[item.pgLevel - default_level].Key,
+            });
+          }
+        }
+      });
+    } else if (user_type === 'C') {
+      C_Page.forEach((item) => {
+        if (find_id == item.id) {
+          find_level = item.pgLevel;
+        }
+      });
+      let index = C_Page.findIndex((item) => item.id == find_id);
+      let pgLevel_cnt = 0;
+      C_Page.splice(index, 1);
+      C_Page.forEach((item) => {
+        if (find_level == item.pgLevel) {
+          pgLevel_cnt++;
+        }
+      });
+      C_Page.forEach((item) => {
+        if (item.id > find_id) {
+          item.id--;
+          if (pgLevel_cnt == 0) {
+            item.pgLevel--;
+            item.imgpath = s3.getSignedUrl('getObject', {
+              Bucket: params_C[item.pgLevel - default_level].Bucket,
+              Key: params_C[item.pgLevel - default_level].Key,
+            });
+          }
+        }
+      });
+    } else if (user_type === 'D') {
+      D_Page.forEach((item) => {
+        if (find_id == item.id) {
+          find_level = item.pgLevel;
+        }
+      });
+      let index = D_Page.findIndex((item) => item.id == find_id);
+      let pgLevel_cnt = 0;
+      D_Page.splice(index, 1);
+      D_Page.forEach((item) => {
+        if (find_level == item.pgLevel) {
+          pgLevel_cnt++;
+        }
+      });
+      D_Page.forEach((item) => {
+        if (item.id > find_id) {
+          item.id--;
+          if (pgLevel_cnt == 0) {
+            item.pgLevel--;
+            item.imgpath = s3.getSignedUrl('getObject', {
+              Bucket: params_D[item.pgLevel - default_level].Bucket,
+              Key: params_D[item.pgLevel - default_level].Key,
+            });
+          }
+        }
+      });
+    } else if (user_type === 'E') {
+      E_Page.forEach((item) => {
+        if (find_id == item.id) {
+          find_level = item.pgLevel;
+        }
+      });
+      let index = E_Page.findIndex((item) => item.id == find_id);
+      let pgLevel_cnt = 0;
+      E_Page.splice(index, 1);
+      E_Page.forEach((item) => {
+        if (find_level == item.pgLevel) {
+          pgLevel_cnt++;
+        }
+      });
+      E_Page.forEach((item) => {
+        if (item.id > find_id) {
+          item.id--;
+          if (pgLevel_cnt == 0) {
+            item.pgLevel--;
+            item.imgpath = s3.getSignedUrl('getObject', {
+              Bucket: params_E[item.pgLevel - default_level].Bucket,
+              Key: params_E[item.pgLevel - default_level].Key,
+            });
+          }
+        }
+      });
+    }
+  }
+  res.redirect('/typePage/' + user_type);
+});
 app.listen(app.get('port'), () => {
   console.log(app.get('port'), '번 포트에서 서버 실행 중');
 });
