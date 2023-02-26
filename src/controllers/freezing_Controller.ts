@@ -4,8 +4,9 @@ import { Request, Response } from 'express';
 
 export default class Freezing_Controller {
   //Create Freezing
-  addSurvey_Freezing = async (req: Request, res: Response) => {
+  add_Freezing = async (req: Request, res: Response) => {
     let freezing_info = {
+      Test_date: req.body.Test_date,
       Freezing_past_experience: req.body.Freezing_past_experience,
       Freezing_egg_count: req.body.Freezing_egg_count,
     };
@@ -22,7 +23,7 @@ export default class Freezing_Controller {
   };
 
   //Read freezing
-  getSurvey_freezing = async (req: Request, res: Response) => {
+  get_Freezing = async (req: Request, res: Response) => {
     let info = req.body.Freezing_id;
     const freezing_Repo = MySQLDataSource.getRepository(Freezing);
 
@@ -36,20 +37,20 @@ export default class Freezing_Controller {
   };
 
   //Read all freezing
-  getSurvey_All_freezing = async (req: Request, res: Response) => {
+  get_All_Freezing = async (req: Request, res: Response) => {
     const freezing_Repo = MySQLDataSource.getRepository(Freezing);
 
     await freezing_Repo
       .findAndCount()
       .then((data) => {
         res.json(data);
-        console.log('Get All freezing : ', data);
+        console.log('Get All Freezing : ', data);
       })
       .catch((err) => console.log(err));
   };
 
   //Update Freezing
-  updateSurvey_freezing = async (req: Request, res: Response) => {
+  update_Freezing = async (req: Request, res: Response) => {
     const freezing_Repo = MySQLDataSource.getRepository(Freezing);
 
     await freezing_Repo
@@ -66,7 +67,7 @@ export default class Freezing_Controller {
   };
 
   //Delete Freezing
-  deleteSurvey_freezing = async (req: Request, res: Response) => {
+  delete_Freezing = async (req: Request, res: Response) => {
     const freezing_Repo = MySQLDataSource.getRepository(Freezing);
 
     await freezing_Repo
@@ -77,7 +78,7 @@ export default class Freezing_Controller {
       .execute()
       .then((data) => {
         res.json(data);
-        console.log('Delete freezing : ', data);
+        console.log('Delete Freezing : ', data);
       })
       .catch((err) => console.log(err));
   };

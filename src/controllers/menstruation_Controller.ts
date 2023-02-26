@@ -4,9 +4,10 @@ import { Request, Response } from 'express';
 
 export default class Menstruation_Controller {
   //Create Menstruation
-  addSurvey_Menstruation = async (req: Request, res: Response) => {
+  add_Menstruation = async (req: Request, res: Response) => {
     let menstruation_info = {
-      last_date: req.body.last_date,
+      Test_date: req.body.Test_date,
+      last_menstruation_date: req.body.last_menstruation_date,
       duration: req.body.duration,
       term: req.body.term,
       is_repetitive: req.body.is_repetitive,
@@ -24,7 +25,7 @@ export default class Menstruation_Controller {
   };
 
   //Read menstruation
-  getSurvey_menstruation = async (req: Request, res: Response) => {
+  get_Menstruation = async (req: Request, res: Response) => {
     let info = req.body.Menstruation_id;
     const menstruation_Repo = MySQLDataSource.getRepository(Menstruation);
 
@@ -38,7 +39,7 @@ export default class Menstruation_Controller {
   };
 
   //Read all menstruation
-  getSurvey_All_menstruation = async (req: Request, res: Response) => {
+  get_All_Menstruation = async (req: Request, res: Response) => {
     const menstruation_Repo = MySQLDataSource.getRepository(Menstruation);
 
     await menstruation_Repo
@@ -51,7 +52,7 @@ export default class Menstruation_Controller {
   };
 
   //Update Menstruation
-  updateSurvey_menstruation = async (req: Request, res: Response) => {
+  update_Menstruation = async (req: Request, res: Response) => {
     const menstruation_Repo = MySQLDataSource.getRepository(Menstruation);
 
     await menstruation_Repo
@@ -68,7 +69,7 @@ export default class Menstruation_Controller {
   };
 
   //Delete Menstruation
-  deleteSurvey_menstruation = async (req: Request, res: Response) => {
+  delete_Menstruation = async (req: Request, res: Response) => {
     const menstruation_Repo = MySQLDataSource.getRepository(Menstruation);
 
     await menstruation_Repo

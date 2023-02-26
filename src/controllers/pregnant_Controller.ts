@@ -4,8 +4,9 @@ import { Request, Response } from 'express';
 
 export default class Pregnant_Controller {
   //Create Pregnant
-  addSurvey_Pregnant = async (req: Request, res: Response) => {
+  add_Pregnant = async (req: Request, res: Response) => {
     let pregnant_info = {
+      Test_date: req.body.Test_date,
       User_Type: req.body.User_Type,
       first_pregnant: req.body.first_pregnant,
       second_pregnant: req.body.second_pregnant,
@@ -24,7 +25,7 @@ export default class Pregnant_Controller {
   };
 
   //Read pregnant
-  getSurvey_pregnant = async (req: Request, res: Response) => {
+  get_Pregnant = async (req: Request, res: Response) => {
     let info = req.body.Pregnant_id;
     const pregnant_Repo = MySQLDataSource.getRepository(Pregnant);
 
@@ -38,20 +39,20 @@ export default class Pregnant_Controller {
   };
 
   //Read all pregnant
-  getSurvey_All_pregnant = async (req: Request, res: Response) => {
+  get_All_Pregnant = async (req: Request, res: Response) => {
     const pregnant_Repo = MySQLDataSource.getRepository(Pregnant);
 
     await pregnant_Repo
       .findAndCount()
       .then((data) => {
         res.json(data);
-        console.log('Get All pregnant : ', data);
+        console.log('Get All Pregnant : ', data);
       })
       .catch((err) => console.log(err));
   };
 
   //Update Pregnant
-  updateSurvey_pregnant = async (req: Request, res: Response) => {
+  update_Pregnant = async (req: Request, res: Response) => {
     const pregnant_Repo = MySQLDataSource.getRepository(Pregnant);
 
     await pregnant_Repo
@@ -68,7 +69,7 @@ export default class Pregnant_Controller {
   };
 
   //Delete pregnant
-  deleteSurvey_pregnant = async (req: Request, res: Response) => {
+  delete_Pregnant = async (req: Request, res: Response) => {
     const pregnant_Repo = MySQLDataSource.getRepository(Pregnant);
 
     await pregnant_Repo
@@ -79,7 +80,7 @@ export default class Pregnant_Controller {
       .execute()
       .then((data) => {
         res.json(data);
-        console.log('Delete pregnant : ', data);
+        console.log('Delete Pregnant : ', data);
       })
       .catch((err) => console.log(err));
   };

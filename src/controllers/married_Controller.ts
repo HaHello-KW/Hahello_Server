@@ -4,8 +4,9 @@ import { Request, Response } from 'express';
 
 export default class Married_Controller {
   //Create Married
-  addSurvey_Married = async (req: Request, res: Response) => {
+  add_Married = async (req: Request, res: Response) => {
     let married_info = {
+      Test_date: req.body.Test_date,
       User_Type: req.body.User_Type,
       Married_age: req.body.Married_age,
     };
@@ -22,7 +23,7 @@ export default class Married_Controller {
   };
 
   //Read married
-  getSurvey_married = async (req: Request, res: Response) => {
+  get_Married = async (req: Request, res: Response) => {
     let info = req.body.Marrid_id;
     const married_Repo = MySQLDataSource.getRepository(Married);
 
@@ -36,20 +37,20 @@ export default class Married_Controller {
   };
 
   //Read all married
-  getSurvey_All_married = async (req: Request, res: Response) => {
+  get_All_Married = async (req: Request, res: Response) => {
     const married_Repo = MySQLDataSource.getRepository(Married);
 
     await married_Repo
       .findAndCount()
       .then((data) => {
         res.json(data);
-        console.log('Get All married : ', data);
+        console.log('Get All Married : ', data);
       })
       .catch((err) => console.log(err));
   };
 
   //Update Married
-  updateSurvey_married = async (req: Request, res: Response) => {
+  update_Married = async (req: Request, res: Response) => {
     const married_Repo = MySQLDataSource.getRepository(Married);
 
     await married_Repo
@@ -66,7 +67,7 @@ export default class Married_Controller {
   };
 
   //Delete married
-  deleteSurvey_married = async (req: Request, res: Response) => {
+  delete_Married = async (req: Request, res: Response) => {
     const married_Repo = MySQLDataSource.getRepository(Married);
 
     await married_Repo
@@ -77,7 +78,7 @@ export default class Married_Controller {
       .execute()
       .then((data) => {
         res.json(data);
-        console.log('Delete married : ', data);
+        console.log('Delete Married : ', data);
       })
       .catch((err) => console.log(err));
   };

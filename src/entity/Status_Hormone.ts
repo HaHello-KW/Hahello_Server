@@ -13,19 +13,19 @@ export class Status_Hormone {
   @Column({ type: 'varchar', nullable: false, unique: true })
   Test_date!: string;
 
-  @Column({ type: 'float' })
+  @Column({ type: 'float', nullable: true })
   AMH!: number;
 
-  @Column({ type: 'float' })
+  @Column({ type: 'float', nullable: true })
   LH!: number;
 
-  @Column({ type: 'float' })
+  @Column({ type: 'float', nullable: true })
   E2!: number;
 
-  @Column({ type: 'float' })
+  @Column({ type: 'float', nullable: true })
   FSH!: number;
 
-  @Column({ type: 'float' })
+  @Column({ type: 'float', nullable: true })
   TSH!: number;
 }
 

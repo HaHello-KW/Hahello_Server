@@ -1,6 +1,6 @@
 import { MySQLDataSource } from '../data-source';
 import { Users } from '../entity/Users';
-import { User_Default_Info } from '../entity/User_Default_Info';
+import { Test_Default } from '../entity/Test_Default';
 import { Freezing } from '../entity/Freezing';
 import { Married } from '../entity/Married';
 import { Pregnant } from '../entity/Pregnant';

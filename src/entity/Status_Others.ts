@@ -36,10 +36,10 @@ export class Status_Others {
   Cooking!: number;
 
   //medicine을 Enum으로 하기로 했는데 영양제가 여러가지 선택하게 될 시에는 배열형태로 저장해야하는지
-  @Column({ type: 'enum', enum: Medicines })
+  @Column({ type: 'enum', enum: Medicines, nullable: false })
   Medicine!: Medicines[];
 
-  @Column({})
+  @Column({ nullable: false })
   Seafood_al!: boolean;
 
   //JSON은 Key_Value인데 Key, Value를 각각 어떻게 할 것인가??

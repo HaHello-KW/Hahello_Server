@@ -49,6 +49,6 @@ export class Questions {
   ThirdlineTxt!: string;
 
   @Column({ type: 'varchar', nullable: false })
-  ImgPaht!: string;
+  ImgPath!: string;
 }
 export default Questions;
