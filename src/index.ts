@@ -5,7 +5,7 @@ import { Request, Response, NextFunction, Application } from 'express';
 import { MySQLDataSource } from './data-source';
 
 // Controllers (route handlers)
-import * as userController from './controllers/userController';
+// import * as userController from './controllers/userController';
 
 const app: Application = express();
 const prod: boolean = process.env.NODE_ENV === 'production';
