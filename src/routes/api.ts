@@ -176,6 +176,11 @@ interface typePageModel {
   thirdlineTxt?: any;
   nextpage?: string;
 }
+interface resultPageModel {
+  questionId: string;
+  title: string;
+  description: string[];
+}
 let default_id = 0;
 let default_level = 1;
 
@@ -1088,6 +1093,142 @@ let E_Page: typePageModel[] = [
     thirdlineTxt: null,
   },
 ];
+
+let Result_A_Page: resultPageModel[] = [
+  {
+    questionId: 'A1',
+    title: '생기 있는 설계자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'A2',
+    title: '자신감 있는 설계자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'A3',
+    title: '체계적인 설계자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'A4',
+    title: '신중한 설계자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'A5',
+    title: '여유로운 설계자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+];
+let Result_B_Page: resultPageModel[] = [
+  {
+    questionId: 'B1',
+    title: '매력적인 추진자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'B2',
+    title: '긍정적인 추진자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'B3',
+    title: '활기 있는 추진자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'B4',
+    title: '믿음을 주는 추진자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'B5',
+    title: '자유를 만끽하는 추진자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+];
+let Result_C_Page: resultPageModel[] = [
+  {
+    questionId: 'C1',
+    title: '빛나는 예술가 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'C2',
+    title: '생각이 깊은 예술가 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'C3',
+    title: '이끌어 가는 예술가 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'C4',
+    title: '결단력 있는 예술가 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'C5',
+    title: '철저한 예술가 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+];
+let Result_D_Page: resultPageModel[] = [
+  {
+    questionId: 'D1',
+    title: '행동하는 항해자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'D2',
+    title: '주도적인 항해자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'D3',
+    title: '의욕적인 항해자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'D4',
+    title: '사려 깊은 항해자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'D5',
+    title: '통찰력 있는 항해자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+];
+let Result_E_Page: resultPageModel[] = [
+  {
+    questionId: 'E1',
+    title: '꼼꼼한 수호자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'E2',
+    title: '세심한 수호자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'E3',
+    title: '굳건한 수호자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'E4',
+    title: '자신을 믿는 수호자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+  {
+    questionId: 'E5',
+    title: '주의 깊은 수호자 유형',
+    description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+  },
+];
 app.get('/defaultPage', (req: express.Request, res: express.Response) => {
   res.send(default_page);
 });
@@ -1105,6 +1246,21 @@ app.get('/typePage/:type', (req: express.Request, res: express.Response) => {
     res.send(D_Page);
   } else if (user_type === 'E') {
     res.send(E_Page);
+  }
+});
+app.get('/resultPage/:type', (req: express.Request, res: express.Response) => {
+  // const user_type = req.body.married_type;
+  const user_type = req.params.type;
+  if (user_type === 'A') {
+    res.send(Result_A_Page);
+  } else if (user_type === 'B') {
+    res.send(Result_B_Page);
+  } else if (user_type === 'C') {
+    res.send(Result_C_Page);
+  } else if (user_type === 'D') {
+    res.send(Result_D_Page);
+  } else if (user_type === 'E') {
+    res.send(Result_E_Page);
   }
 });
 app.post('/defaultPage', (req: express.Request, res: express.Response) => {
