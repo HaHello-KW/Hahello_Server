@@ -8,7 +8,11 @@ app.set('port', process.env.PORT || 8080);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const s3 = new AWS.S3();
+const s3 = new AWS.S3({
+  region: 'ap-northeast-2',
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+});
 
 interface Params {
   Bucket: string;
@@ -21,127 +25,127 @@ interface Params {
 const params_A: Array<Params> = [
   {
     Bucket: 'hahello-server/images/Type-A/A-1',
-    Key: 'A-1-1.png',
+    Key: 'A1-1.png',
   },
   {
     Bucket: 'hahello-server/images/Type-A/A-1',
-    Key: 'A-1-2.png',
+    Key: 'A1-2.png',
   },
   {
     Bucket: 'hahello-server/images/Type-A/A-1',
-    Key: 'A-1-3.png',
+    Key: 'A1-3.png',
   },
   {
     Bucket: 'hahello-server/images/Type-A/A-1',
-    Key: 'A-1-4.png',
+    Key: 'A1-4.png',
   },
   {
     Bucket: 'hahello-server/images/Type-A/A-1',
-    Key: 'A-1-5.png',
+    Key: 'A1-5.png',
   },
 ];
 
 const params_B: Array<Params> = [
   {
     Bucket: 'hahello-server/images/Type-B/B-1',
-    Key: 'B-1-1.png',
+    Key: 'B1-1.png',
   },
   {
     Bucket: 'hahello-server/images/Type-B/B-1',
-    Key: 'B-1-2.png',
+    Key: 'B1-2.png',
   },
   {
     Bucket: 'hahello-server/images/Type-B/B-1',
-    Key: 'B-1-3.png',
+    Key: 'B1-3.png',
   },
   {
     Bucket: 'hahello-server/images/Type-B/B-1',
-    Key: 'B-1-4.png',
+    Key: 'B1-4.png',
   },
   {
     Bucket: 'hahello-server/images/Type-B/B-1',
-    Key: 'B-1-5.png',
+    Key: 'B1-5.png',
   },
   {
     Bucket: 'hahello-server/images/Type-B/B-1',
-    Key: 'B-1-6.png',
+    Key: 'B1-6.png',
   },
 ];
 
 const params_C: Array<Params> = [
   {
     Bucket: 'hahello-server/images/Type-C/C-1',
-    Key: 'C-1-1.png',
+    Key: 'C1-1.png',
   },
   {
     Bucket: 'hahello-server/images/Type-C/C-1',
-    Key: 'C-1-2.png',
+    Key: 'C1-2.png',
   },
   {
     Bucket: 'hahello-server/images/Type-C/C-1',
-    Key: 'C-1-3.png',
+    Key: 'C1-3.png',
   },
   {
     Bucket: 'hahello-server/images/Type-C/C-1',
-    Key: 'C-1-4.png',
+    Key: 'C1-4.png',
   },
   {
     Bucket: 'hahello-server/images/Type-C/C-1',
-    Key: 'C-1-5.png',
+    Key: 'C1-5.png',
   },
   {
     Bucket: 'hahello-server/images/Type-C/C-1',
-    Key: 'C-1-6.png',
+    Key: 'C1-6.png',
   },
 ];
 
 const params_D: Array<Params> = [
   {
     Bucket: 'hahello-server/images/Type-D/D-1',
-    Key: 'D-1-1.png',
+    Key: 'D1-1.png',
   },
   {
     Bucket: 'hahello-server/images/Type-D/D-1',
-    Key: 'D-1-2.png',
+    Key: 'D1-2.png',
   },
   {
     Bucket: 'hahello-server/images/Type-D/D-1',
-    Key: 'D-1-3.png',
+    Key: 'D1-3.png',
   },
   {
     Bucket: 'hahello-server/images/Type-D/D-1',
-    Key: 'D-1-4.png',
+    Key: 'D1-4.png',
   },
   {
     Bucket: 'hahello-server/images/Type-D/D-1',
-    Key: 'D-1-5.png',
+    Key: 'D1-5.png',
   },
   {
     Bucket: 'hahello-server/images/Type-D/D-1',
-    Key: 'D-1-6.png',
+    Key: 'D1-6.png',
   },
 ];
 
 const params_E: Array<Params> = [
   {
     Bucket: 'hahello-server/images/Type-E/E-1',
-    Key: 'E-1-1.png',
+    Key: 'E1-1.png',
   },
   {
     Bucket: 'hahello-server/images/Type-E/E-1',
-    Key: 'E-1-2.png',
+    Key: 'E1-2.png',
   },
   {
     Bucket: 'hahello-server/images/Type-E/E-1',
-    Key: 'E-1-3.png',
+    Key: 'E1-3.png',
   },
   {
     Bucket: 'hahello-server/images/Type-E/E-1',
-    Key: 'E-1-4.png',
+    Key: 'E1-4.png',
   },
   {
     Bucket: 'hahello-server/images/Type-E/E-1',
-    Key: 'E-1-5.png',
+    Key: 'E1-5.png',
   },
 ];
 
@@ -180,6 +184,7 @@ interface resultPageModel {
   questionId: string;
   title: string;
   description: string[];
+  imgpath?: string | object;
 }
 let default_id = 0;
 let default_level = 1;
@@ -251,11 +256,11 @@ let type_E_level = default_level;
 
 let A_Page: typePageModel[] = [
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_A[type_A_level - default_level].Bucket,
-    //   Key: params_A[type_A_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-1.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_A[type_A_level - default_level].Bucket,
+      Key: params_A[type_A_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-1.png',
     pagename: 'q_a_1',
     id: type_A_id++,
     pgLevel: type_A_level,
@@ -270,11 +275,11 @@ let A_Page: typePageModel[] = [
     thirdlineTxt: null,
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_A[type_A_level - default_level].Bucket,
-    //   Key: params_A[type_A_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-1.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_A[type_A_level - default_level].Bucket,
+      Key: params_A[type_A_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-1.png',
     pagename: 'q_a_2',
     id: type_A_id++,
     pgLevel: type_A_level++,
@@ -289,11 +294,11 @@ let A_Page: typePageModel[] = [
     thirdlineTxt: '결혼하면 좋겠어',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_A[type_A_level - default_level].Bucket,
-    //   Key: params_A[type_A_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-2.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_A[type_A_level - default_level].Bucket,
+      Key: params_A[type_A_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-2.png',
     pagename: 'q_a_3',
     id: type_A_id++,
     pgLevel: type_A_level,
@@ -308,11 +313,11 @@ let A_Page: typePageModel[] = [
     thirdlineTxt: null,
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_A[type_A_level - default_level].Bucket,
-    //   Key: params_A[type_A_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-2.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_A[type_A_level - default_level].Bucket,
+      Key: params_A[type_A_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-2.png',
     pagename: 'q_a_4',
     id: type_A_id++,
     pgLevel: type_A_level,
@@ -327,11 +332,11 @@ let A_Page: typePageModel[] = [
     thirdlineTxt: '첫째 아이를 갖고 싶어',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_A[type_A_level - default_level].Bucket,
-    //   Key: params_A[type_A_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-2.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_A[type_A_level - default_level].Bucket,
+      Key: params_A[type_A_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-2.png',
     pagename: 'q_a_5',
     id: type_A_id++,
     pgLevel: type_A_level,
@@ -346,11 +351,11 @@ let A_Page: typePageModel[] = [
     thirdlineTxt: null,
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_A[type_A_level - default_level].Bucket,
-    //   Key: params_A[type_A_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-2.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_A[type_A_level - default_level].Bucket,
+      Key: params_A[type_A_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-2.png',
     pagename: 'q_a_6',
     id: type_A_id++,
     pgLevel: type_A_level++,
@@ -365,11 +370,11 @@ let A_Page: typePageModel[] = [
     thirdlineTxt: '둘째 아이를 갖고 싶어',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_A[type_A_level - default_level].Bucket,
-    //   Key: params_A[type_A_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-3.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_A[type_A_level - default_level].Bucket,
+      Key: params_A[type_A_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-3.png',
     pagename: 'q_a_7',
     id: type_A_id++,
     pgLevel: type_A_level++,
@@ -389,11 +394,11 @@ let A_Page: typePageModel[] = [
     thirdlineTxt: null,
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_A[type_A_level - default_level].Bucket,
-    //   Key: params_A[type_A_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-4.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_A[type_A_level - default_level].Bucket,
+      Key: params_A[type_A_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-4.png',
     pagename: 'q_a_8',
     id: type_A_id++,
     pgLevel: type_A_level,
@@ -408,11 +413,11 @@ let A_Page: typePageModel[] = [
     thirdlineTxt: '나의 생리기간은 ',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_A[type_A_level - default_level].Bucket,
-    //   Key: params_A[type_A_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-4.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_A[type_A_level - default_level].Bucket,
+      Key: params_A[type_A_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-4.png',
     pagename: 'q_a_9',
     id: type_A_id++,
     pgLevel: type_A_level++,
@@ -430,11 +435,11 @@ let A_Page: typePageModel[] = [
 
 let B_Page: typePageModel[] = [
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_B[type_B_level - default_level].Bucket,
-    //   Key: params_B[type_B_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-1.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_B[type_B_level - default_level].Bucket,
+      Key: params_B[type_B_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-1.png',
     pagename: 'q_b_1',
     id: type_B_id++,
     pgLevel: type_B_level++,
@@ -449,11 +454,11 @@ let B_Page: typePageModel[] = [
     thirdlineTxt: '결혼했어',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_B[type_B_level - default_level].Bucket,
-    //   Key: params_B[type_B_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-2.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_B[type_B_level - default_level].Bucket,
+      Key: params_B[type_B_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-2.png',
     pagename: 'q_b_2',
     id: type_B_id++,
     pgLevel: type_B_level,
@@ -468,11 +473,11 @@ let B_Page: typePageModel[] = [
     thirdlineTxt: null,
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_B[type_B_level - default_level].Bucket,
-    //   Key: params_B[type_B_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-2.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_B[type_B_level - default_level].Bucket,
+      Key: params_B[type_B_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-2.png',
     pagename: 'q_b_3',
     id: type_B_id++,
     pgLevel: type_B_level,
@@ -487,11 +492,11 @@ let B_Page: typePageModel[] = [
     thirdlineTxt: '첫째 아이를 갖고 싶어',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_B[type_B_level - default_level].Bucket,
-    //   Key: params_B[type_B_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-2.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_B[type_B_level - default_level].Bucket,
+      Key: params_B[type_B_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-2.png',
     pagename: 'q_b_4',
     id: type_B_id++,
     pgLevel: type_B_level++,
@@ -506,11 +511,11 @@ let B_Page: typePageModel[] = [
     thirdlineTxt: '둘째 아이를 갖고 싶어',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_B[type_B_level - default_level].Bucket,
-    //   Key: params_B[type_B_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-3.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_B[type_B_level - default_level].Bucket,
+      Key: params_B[type_B_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-3.png',
     pagename: 'q_b_5',
     id: type_B_id++,
     pgLevel: type_B_level,
@@ -525,11 +530,11 @@ let B_Page: typePageModel[] = [
     thirdlineTxt: null,
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_B[type_B_level - default_level].Bucket,
-    //   Key: params_B[type_B_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-3.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_B[type_B_level - default_level].Bucket,
+      Key: params_B[type_B_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-3.png',
     pagename: 'q_b_6',
     id: type_B_id++,
     pgLevel: type_B_level++,
@@ -544,11 +549,11 @@ let B_Page: typePageModel[] = [
     thirdlineTxt: '개의 난자를 얼려놓았어',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_B[type_B_level - default_level].Bucket,
-    //   Key: params_B[type_B_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-4.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_B[type_B_level - default_level].Bucket,
+      Key: params_B[type_B_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-4.png',
     pagename: 'q_b_7',
     id: type_B_id++,
     pgLevel: type_B_level++,
@@ -563,11 +568,11 @@ let B_Page: typePageModel[] = [
     thirdlineTxt: null,
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_B[type_B_level - default_level].Bucket,
-    //   Key: params_B[type_B_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-5.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_B[type_B_level - default_level].Bucket,
+      Key: params_B[type_B_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-5.png',
     pagename: 'q_b_8',
     id: type_B_id++,
     pgLevel: type_B_level,
@@ -582,11 +587,11 @@ let B_Page: typePageModel[] = [
     thirdlineTxt: '나의 생리기간은 ',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_B[type_B_level - default_level].Bucket,
-    //   Key: params_B[type_B_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-5.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_B[type_B_level - default_level].Bucket,
+      Key: params_B[type_B_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-5.png',
     pagename: 'q_b_9',
     id: type_B_id++,
     pgLevel: type_B_level++,
@@ -603,11 +608,11 @@ let B_Page: typePageModel[] = [
 ];
 let C_Page: typePageModel[] = [
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_C[type_C_level - default_level].Bucket,
-    //   Key: params_C[type_C_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-1.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_C[type_C_level - default_level].Bucket,
+      Key: params_C[type_C_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-1.png',
     pagename: 'q_c_1',
     id: type_C_id++,
     pgLevel: type_C_level++,
@@ -622,11 +627,11 @@ let C_Page: typePageModel[] = [
     thirdlineTxt: '결혼했어',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_C[type_C_level - default_level].Bucket,
-    //   Key: params_C[type_C_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-2.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_C[type_C_level - default_level].Bucket,
+      Key: params_C[type_C_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-2.png',
     pagename: 'q_c_2',
     id: type_C_id++,
     pgLevel: type_C_level,
@@ -641,11 +646,11 @@ let C_Page: typePageModel[] = [
     thirdlineTxt: null,
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_C[type_C_level - default_level].Bucket,
-    //   Key: params_C[type_C_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-2.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_C[type_C_level - default_level].Bucket,
+      Key: params_C[type_C_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-2.png',
     pagename: 'q_c_3',
     id: type_C_id++,
     pgLevel: type_C_level,
@@ -660,11 +665,11 @@ let C_Page: typePageModel[] = [
     thirdlineTxt: '첫째 아이를 갖고 싶어',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_C[type_C_level - default_level].Bucket,
-    //   Key: params_C[type_C_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-2.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_C[type_C_level - default_level].Bucket,
+      Key: params_C[type_C_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-2.png',
     pagename: 'q_c_4',
     id: type_C_id++,
     pgLevel: type_C_level++,
@@ -679,11 +684,11 @@ let C_Page: typePageModel[] = [
     thirdlineTxt: '둘째 아이를 갖고 싶어',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_C[type_C_level - default_level].Bucket,
-    //   Key: params_C[type_C_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-3.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_C[type_C_level - default_level].Bucket,
+      Key: params_C[type_C_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-3.png',
     pagename: 'q_c_5',
     id: type_C_id++,
     pgLevel: type_C_level,
@@ -698,11 +703,11 @@ let C_Page: typePageModel[] = [
     thirdlineTxt: null,
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_C[type_C_level - default_level].Bucket,
-    //   Key: params_C[type_C_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-3.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_C[type_C_level - default_level].Bucket,
+      Key: params_C[type_C_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-3.png',
     pagename: 'q_c_6',
     id: type_C_id++,
     pgLevel: type_C_level++,
@@ -717,11 +722,11 @@ let C_Page: typePageModel[] = [
     thirdlineTxt: '개의 난자를 얼려놓았어',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_C[type_C_level - default_level].Bucket,
-    //   Key: params_C[type_C_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-4.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_C[type_C_level - default_level].Bucket,
+      Key: params_C[type_C_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-4.png',
     pagename: 'q_c_7',
     id: type_C_id++,
     pgLevel: type_C_level++,
@@ -736,11 +741,11 @@ let C_Page: typePageModel[] = [
     thirdlineTxt: null,
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_C[type_C_level - default_level].Bucket,
-    //   Key: params_C[type_C_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-5.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_C[type_C_level - default_level].Bucket,
+      Key: params_C[type_C_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-5.png',
     pagename: 'q_c_8',
     id: type_C_id++,
     pgLevel: type_C_level,
@@ -755,11 +760,11 @@ let C_Page: typePageModel[] = [
     thirdlineTxt: '나의 생리기간은 ',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_C[type_C_level - default_level].Bucket,
-    //   Key: params_C[type_C_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-5.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_C[type_C_level - default_level].Bucket,
+      Key: params_C[type_C_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-5.png',
     pagename: 'q_c_9',
     id: type_C_id++,
     pgLevel: type_C_level++,
@@ -776,11 +781,11 @@ let C_Page: typePageModel[] = [
 ];
 let D_Page: typePageModel[] = [
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_D[type_D_level - default_level].Bucket,
-    //   Key: params_D[type_D_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-1.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_D[type_D_level - default_level].Bucket,
+      Key: params_D[type_D_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-1.png',
     pagename: 'q_d_1',
     id: type_D_id++,
     pgLevel: type_D_level++,
@@ -795,11 +800,11 @@ let D_Page: typePageModel[] = [
     thirdlineTxt: null,
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_D[type_D_level - default_level].Bucket,
-    //   Key: params_D[type_D_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-2.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_D[type_D_level - default_level].Bucket,
+      Key: params_D[type_D_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-2.png',
     pagename: 'q_d_2',
     id: type_D_id++,
     pgLevel: type_D_level,
@@ -814,11 +819,11 @@ let D_Page: typePageModel[] = [
     thirdlineTxt: '첫째를 낳았고',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_D[type_D_level - default_level].Bucket,
-    //   Key: params_D[type_D_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-2.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_D[type_D_level - default_level].Bucket,
+      Key: params_D[type_D_level - default_level].Key,
+    }),
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-2.png',
     pagename: 'q_d_3',
     id: type_D_id++,
     pgLevel: type_D_level,
@@ -833,11 +838,11 @@ let D_Page: typePageModel[] = [
     thirdlineTxt: '둘째 아이를 갖고 싶어',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_D[type_D_level - default_level].Bucket,
-    //   Key: params_D[type_D_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-2.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_D[type_D_level - default_level].Bucket,
+      Key: params_D[type_D_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-2.png',
     pagename: 'q_d_4',
     id: type_D_id++,
     pgLevel: type_D_level,
@@ -852,11 +857,11 @@ let D_Page: typePageModel[] = [
     thirdlineTxt: '둘째를 낳았고',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_D[type_D_level - default_level].Bucket,
-    //   Key: params_D[type_D_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-2.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_D[type_D_level - default_level].Bucket,
+      Key: params_D[type_D_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-2.png',
     pagename: 'q_d_5',
     id: type_D_id++,
     pgLevel: type_D_level++,
@@ -871,11 +876,11 @@ let D_Page: typePageModel[] = [
     thirdlineTxt: '셋째 아이를 갖고 싶어',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_D[type_D_level - default_level].Bucket,
-    //   Key: params_D[type_D_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-3.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_D[type_D_level - default_level].Bucket,
+      Key: params_D[type_D_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-3.png',
     pagename: 'q_d_6',
     id: type_D_id++,
     pgLevel: type_D_level,
@@ -890,11 +895,11 @@ let D_Page: typePageModel[] = [
     thirdlineTxt: null,
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_D[type_D_level - default_level].Bucket,
-    //   Key: params_D[type_D_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-3.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_D[type_D_level - default_level].Bucket,
+      Key: params_D[type_D_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-3.png',
     pagename: 'q_d_7',
     id: type_D_id++,
     pgLevel: type_D_level++,
@@ -909,11 +914,11 @@ let D_Page: typePageModel[] = [
     thirdlineTxt: '개의 난자를 얼려 놓았어',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_D[type_D_level - default_level].Bucket,
-    //   Key: params_D[type_D_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-4.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_D[type_D_level - default_level].Bucket,
+      Key: params_D[type_D_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-4.png',
     pagename: 'q_d_8',
     id: type_D_id++,
     pgLevel: type_D_level++,
@@ -928,11 +933,11 @@ let D_Page: typePageModel[] = [
     thirdlineTxt: null,
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_D[type_D_level - default_level].Bucket,
-    //   Key: params_D[type_D_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-5.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_D[type_D_level - default_level].Bucket,
+      Key: params_D[type_D_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-5.png',
     pagename: 'q_d_9',
     id: type_D_id++,
     pgLevel: type_D_level,
@@ -947,11 +952,11 @@ let D_Page: typePageModel[] = [
     thirdlineTxt: '나의 생리기간은 ',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_D[type_D_level - default_level].Bucket,
-    //   Key: params_D[type_D_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-5.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_D[type_D_level - default_level].Bucket,
+      Key: params_D[type_D_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-5.png',
     pagename: 'q_d_10',
     id: type_D_id++,
     pgLevel: type_D_level++,
@@ -968,11 +973,11 @@ let D_Page: typePageModel[] = [
 ];
 let E_Page: typePageModel[] = [
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_E[type_E_level - default_level].Bucket,
-    //   Key: params_E[type_E_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-1.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_E[type_E_level - default_level].Bucket,
+      Key: params_E[type_E_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-1.png',
     pagename: 'q_e_1',
     id: type_E_id++,
     pgLevel: type_E_level++,
@@ -987,11 +992,11 @@ let E_Page: typePageModel[] = [
     thirdlineTxt: '결혼했어',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_E[type_E_level - default_level].Bucket,
-    //   Key: params_E[type_E_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-2.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_E[type_E_level - default_level].Bucket,
+      Key: params_E[type_E_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-2.png',
     pagename: 'q_e_2',
     id: type_E_id++,
     pgLevel: type_E_level,
@@ -1006,11 +1011,11 @@ let E_Page: typePageModel[] = [
     thirdlineTxt: null,
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_E[type_E_level - default_level].Bucket,
-    //   Key: params_E[type_E_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-2.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_E[type_E_level - default_level].Bucket,
+      Key: params_E[type_E_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-2.png',
     pagename: 'q_e_3',
     id: type_E_id++,
     pgLevel: type_E_level,
@@ -1025,11 +1030,11 @@ let E_Page: typePageModel[] = [
     thirdlineTxt: null,
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_E[type_E_level - default_level].Bucket,
-    //   Key: params_E[type_E_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-2.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_E[type_E_level - default_level].Bucket,
+      Key: params_E[type_E_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-2.png',
     pagename: 'q_e_4',
     id: type_E_id++,
     pgLevel: type_E_level,
@@ -1044,11 +1049,11 @@ let E_Page: typePageModel[] = [
     thirdlineTxt: '둘째 아이를 갖고 싶어',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_E[type_E_level - default_level].Bucket,
-    //   Key: params_E[type_E_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-2.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_E[type_E_level - default_level].Bucket,
+      Key: params_E[type_E_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-2.png',
     pagename: 'q_e_5',
     id: type_E_id++,
     pgLevel: type_E_level++,
@@ -1063,11 +1068,11 @@ let E_Page: typePageModel[] = [
     thirdlineTxt: '셋째 아이를 갖고 싶어',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_E[type_E_level - default_level].Bucket,
-    //   Key: params_E[type_E_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-3.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_E[type_E_level - default_level].Bucket,
+      Key: params_E[type_E_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-3.png',
     pagename: 'q_e_6',
     id: type_E_id++,
     pgLevel: type_E_level,
@@ -1082,11 +1087,11 @@ let E_Page: typePageModel[] = [
     thirdlineTxt: null,
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_E[type_E_level - default_level].Bucket,
-    //   Key: params_E[type_E_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-3.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_E[type_E_level - default_level].Bucket,
+      Key: params_E[type_E_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-3.png',
     pagename: 'q_e_7',
     id: type_E_id++,
     pgLevel: type_E_level++,
@@ -1101,11 +1106,11 @@ let E_Page: typePageModel[] = [
     thirdlineTxt: '개의 난자를 얼려 놓았어',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_E[type_E_level - default_level].Bucket,
-    //   Key: params_E[type_E_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-4.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_E[type_E_level - default_level].Bucket,
+      Key: params_E[type_E_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-4.png',
     pagename: 'q_e_8',
     id: type_E_id++,
     pgLevel: type_E_level++,
@@ -1120,11 +1125,11 @@ let E_Page: typePageModel[] = [
     thirdlineTxt: '나의 생리기간은 ',
   },
   {
-    // imgpath: s3.getSignedUrl('getObject', {
-    //   Bucket: params_E[type_E_level - default_level].Bucket,
-    //   Key: params_E[type_E_level - default_level].Key,
-    // }),
-    imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-4.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: params_E[type_E_level - default_level].Bucket,
+      Key: params_E[type_E_level - default_level].Key,
+    }),
+    //imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-4.png',
     pagename: 'q_e_9',
     id: type_E_id++,
     pgLevel: type_E_level,
@@ -1145,26 +1150,51 @@ let Result_A_Page: resultPageModel[] = [
     questionId: 'A1',
     title: '생기 있는 설계자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-1/A1-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-A/A-1',
+      Key: 'A1-result.png',
+    }),
   },
   {
     questionId: 'A2',
     title: '자신감 있는 설계자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-2/A2-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-A/A-2',
+      Key: 'A2-result.png',
+    }),
   },
   {
     questionId: 'A3',
     title: '체계적인 설계자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-3/A3-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-A/A-3',
+      Key: 'A3-result.png',
+    }),
   },
   {
     questionId: 'A4',
     title: '신중한 설계자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-4/A4-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-A/A-4',
+      Key: 'A4-result.png',
+    }),
   },
   {
     questionId: 'A5',
     title: '여유로운 설계자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-A/A-5/A5-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-A/A-5',
+      Key: 'A5-result.png',
+    }),
   },
 ];
 let Result_B_Page: resultPageModel[] = [
@@ -1172,26 +1202,51 @@ let Result_B_Page: resultPageModel[] = [
     questionId: 'B1',
     title: '매력적인 추진자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-1/B1-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-B/B-1',
+      Key: 'B1-result.png',
+    }),
   },
   {
     questionId: 'B2',
     title: '긍정적인 추진자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-2/B2-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-B/B-2',
+      Key: 'B2-result.png',
+    }),
   },
   {
     questionId: 'B3',
     title: '활기 있는 추진자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-3/B3-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-B/B-3',
+      Key: 'B3-result.png',
+    }),
   },
   {
     questionId: 'B4',
     title: '믿음을 주는 추진자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-4/B4-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-B/B-4',
+      Key: 'B4-result.png',
+    }),
   },
   {
     questionId: 'B5',
     title: '자유를 만끽하는 추진자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-B/B-5/B5-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-B/B-5',
+      Key: 'B5-result.png',
+    }),
   },
 ];
 let Result_C_Page: resultPageModel[] = [
@@ -1199,26 +1254,51 @@ let Result_C_Page: resultPageModel[] = [
     questionId: 'C1',
     title: '빛나는 예술가 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-1/C1-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-C/C-1',
+      Key: 'C1-result.png',
+    }),
   },
   {
     questionId: 'C2',
     title: '생각이 깊은 예술가 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-2/C2-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-C/C-2',
+      Key: 'C2-result.png',
+    }),
   },
   {
     questionId: 'C3',
     title: '이끌어 가는 예술가 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-3/C3-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-C/C-3',
+      Key: 'C3-result.png',
+    }),
   },
   {
     questionId: 'C4',
     title: '결단력 있는 예술가 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-4/C4-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-C/C-4',
+      Key: 'C4-result.png',
+    }),
   },
   {
     questionId: 'C5',
     title: '철저한 예술가 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-C/C-5/C5-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-C/C-5',
+      Key: 'C5-result.png',
+    }),
   },
 ];
 let Result_D_Page: resultPageModel[] = [
@@ -1226,26 +1306,51 @@ let Result_D_Page: resultPageModel[] = [
     questionId: 'D1',
     title: '행동하는 항해자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-1/D1-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-D/D-1',
+      Key: 'D1-result.png',
+    }),
   },
   {
     questionId: 'D2',
     title: '주도적인 항해자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-2/D2-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-D/D-2',
+      Key: 'D2-result.png',
+    }),
   },
   {
     questionId: 'D3',
     title: '의욕적인 항해자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-3/D3-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-D/D-3',
+      Key: 'D3-result.png',
+    }),
   },
   {
     questionId: 'D4',
     title: '사려 깊은 항해자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-4/D4-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-D/D-4',
+      Key: 'D4-result.png',
+    }),
   },
   {
     questionId: 'D5',
     title: '통찰력 있는 항해자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-D/D-5/D5-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-D/D-5',
+      Key: 'D5-result.png',
+    }),
   },
 ];
 let Result_E_Page: resultPageModel[] = [
@@ -1253,26 +1358,51 @@ let Result_E_Page: resultPageModel[] = [
     questionId: 'E1',
     title: '꼼꼼한 수호자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-1/E1-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-E/E-1',
+      Key: 'E1-result.png',
+    }),
   },
   {
     questionId: 'E2',
     title: '세심한 수호자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-2/E2-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-E/E-2',
+      Key: 'E2-result.png',
+    }),
   },
   {
     questionId: 'E3',
     title: '굳건한 수호자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-3/E3-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-E/E-3',
+      Key: 'E3-result.png',
+    }),
   },
   {
     questionId: 'E4',
     title: '자신을 믿는 수호자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-4/E4-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-E/E-4',
+      Key: 'E4-result.png',
+    }),
   },
   {
     questionId: 'E5',
     title: '주의 깊은 수호자 유형',
     description: ['하해호님에게 맞는 콘텐츠를 추천해드려요.', '다음 설문에 답변해보세요'],
+    // imgpath: 'https://hahello-server.s3.ap-northeast-2.amazonaws.com/images/Type-E/E-5/E5-result.png',
+    imgpath: s3.getSignedUrl('getObject', {
+      Bucket: 'hahello-server/images/Type-E/E-5',
+      Key: 'E5-result.png',
+    }),
   },
 ];
 app.get('/defaultPage', (req: express.Request, res: express.Response) => {
