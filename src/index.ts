@@ -2,7 +2,9 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 import * as express from 'express';
 import { Request, Response, NextFunction, Application } from 'express';
+import { json } from 'sequelize';
 import { MySQLDataSource } from './data-source';
+import Test_Controller from './controllers/test_Controller';
 
 // Controllers (route handlers)
 // import * as userController from './controllers/userController';
@@ -24,6 +26,7 @@ MySQLDataSource.initialize()
 app.get('/', (req, res) => {
   res.send('Initialized Hahello server');
 });
+
 // app.get('/user', userController.(   ));
 
 // Server Listening

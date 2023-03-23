@@ -20,7 +20,7 @@ export default class Nanim_Controller {
   };
 
   get_Nanim = async (req: Request, res: Response) => {
-    let info = Number(req.params.Nanim_id);
+    let info = req.body.Nanim_id;
     const nanim_Repo = MySQLDataSource.getRepository(Nanim);
 
     await nanim_Repo
@@ -67,7 +67,7 @@ export default class Nanim_Controller {
       .createQueryBuilder()
       .delete()
       .from(Nanim)
-      .where({ Nanim_id: req.params.Nanim_id })
+      .where({ Nanim_id: req.body.Nanim_id })
       .execute()
       .then((data) => {
         res.json(data);

@@ -23,7 +23,7 @@ export default class Test_Default_Controller {
   };
 
   get_Test_Default = async (req: Request, res: Response) => {
-    let info = Number(req.params.Test_Default_id);
+    let info = req.body.Test_Default_id;
     const test_default_Repo = MySQLDataSource.getRepository(Test_Default);
 
     await test_default_Repo
@@ -70,7 +70,7 @@ export default class Test_Default_Controller {
       .createQueryBuilder()
       .delete()
       .from(Test_Default)
-      .where({ Test_Default_id: req.params.Test_Default_id })
+      .where({ Test_Default_id: req.body.Test_Default_id })
       .execute()
       .then((data) => {
         res.json(data);

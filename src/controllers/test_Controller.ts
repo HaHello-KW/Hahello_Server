@@ -20,7 +20,7 @@ export default class Test_Controller {
   };
 
   get_Test = async (req: Request, res: Response) => {
-    let info = Number(req.params.Test_id);
+    let info = req.body.Test_id;
     const test_Repo = MySQLDataSource.getRepository(Test);
 
     await test_Repo
