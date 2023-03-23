@@ -1,6 +1,7 @@
 import * as express from 'express';
 import { S3 } from '@aws-sdk/client-s3';
 import * as AWS from 'aws-sdk';
+import Default_Controller from '../controllers/pages/Default_Controller'
 const app = express();
 
 app.set('port', process.env.PORT || 8080);
@@ -1440,6 +1441,12 @@ app.get('/resultPage/:type', (req: express.Request, res: express.Response) => {
     res.send(Result_E_Page);
   }
 });
+app.get('/defaultTest', (req: express.Request, res: express.Response) => {
+  console.log("this is get defaultPage")
+  res.sendStatus(200).send(res);
+})
+app.post('/defaultTest', Default_Controller.post_Default)
+
 app.post('/defaultPage', (req: express.Request, res: express.Response) => {
   const q_type = req.body.questionType;
   const new_id = req.body.id;
