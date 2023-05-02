@@ -1445,7 +1445,6 @@ app.get('/defaultTest', (req: express.Request, res: express.Response) => {
   console.log("this is get defaultPage")
   res.sendStatus(200).send(res);
 })
-app.post('/defaultTest', Default_Controller.post_Default)
 
 app.post('/defaultPage', (req: express.Request, res: express.Response) => {
   const q_type = req.body.questionType;

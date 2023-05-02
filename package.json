@@ -8,7 +8,7 @@
     "url": "https://github.com/SeungHo0422/Boilerplate_nodejs_express.git"
   },
   "scripts": {
-    "server": "cross-env NODE_ENV=production tsc-watch --onSuccess \"node dist/index.js\" ",
+    "server": "tsc-watch --onSuccess \"node dist/index.js\" ",
     "build": "tsc",
     "start": "npm run build && node ./dist"
   },

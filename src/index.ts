@@ -7,8 +7,9 @@ import * as expressSession from 'express-session';
 import * as hpp from 'hpp';
 import * as Helmet from 'helmet';
 
+import defaultRouter from './routes/default';
+
 import { MySQLDataSource } from './data-source';
-import Test_Controller from './controllers/test_Controller';
 
 // Controllers (route handlers)
 // import * as userController from './controllers/userController';
@@ -17,7 +18,17 @@ dotenv.config();
 const app = express();
 const prod: boolean = process.env.NODE_ENV === 'production';
 
+
+// DB connection
+MySQLDataSource.initialize()
+  .then(() => {
+    console.log('MySQL DataSource has been initialized!');
+  })
+  .catch((err) => {
+    console.error('Error during MySQL DataSource Initialization', err);
+  });
 app.set('port', prod ? process.env.PORT : 3065);
+
 
 // Middleware
 if (prod) {
@@ -58,14 +69,7 @@ app.use(
 // app.use(passport.initialize());
 // app.use(passport.session());
 
-// DB connection
-MySQLDataSource.initialize()
-  .then(() => {
-    console.log('MySQL DataSource has been initialized!');
-  })
-  .catch((err) => {
-    console.error('Error during MySQL DataSource Initialization', err);
-  });
+app.use('/defaultPage', defaultRouter);
 
 // Register Routes
 app.get('/', (req, res, next) => {
