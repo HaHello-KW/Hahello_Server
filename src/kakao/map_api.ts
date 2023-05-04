@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
-
+const dotenv = require('dotenv');
 const express = require('express');
 const request = require('request');
 const app = express();
+dotenv.config();
 
 app.get('/searchHospital', (req: Request, res: Response) => {
   const lat = req.query.lat;
@@ -12,15 +13,15 @@ app.get('/searchHospital', (req: Request, res: Response) => {
     return res.status(400).json({ error: 'lat and lng parameters are required' });
   }
 
-  // 카카오맵 역지오코딩 API 호출을 위한 URL 생성
+  // 역지오코딩 API 호출을 위한 URL 생성
   const reverseGeocodingUrl = `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${lng}&y=${lat}`;
 
-  // 카카오맵 역지오코딩 API 호출을 위한 request options 설정
+  // 역지오코딩 API 호출을 위한 request options 설정
   const reverseGeocodingOptions = {
     url: reverseGeocodingUrl,
     method: 'GET',
     headers: {
-      Authorization: `KakaoAK 2d4f4e6fa070601e33b1c58b04cde4ab`,
+      Authorization: `KakaoAK ${process.env.KAKAO_MAP_API}`,
     },
   };
 
@@ -39,17 +40,17 @@ app.get('/searchHospital', (req: Request, res: Response) => {
       ' ' +
       locationData.documents[0].address.region_3depth_name;
 
-    // 카카오맵 장소 검색 API 호출을 위한 URL 생성
+    // 장소 검색 API 호출을 위한 URL 생성
     const encodedUrl = encodeURI(
-      `https://dapi.kakao.com/v2/local/search/keyword.json?query=병원&x=${lng}&y=${lat}&radius=1000&category_group_code=HP8&size=10`
+      `https://dapi.kakao.com/v2/local/search/keyword.json?query=난임치료&x=${lng}&y=${lat}&radius=5000&category_group_code=HP8&size=10`
     );
 
-    // 카카오맵 장소 검색 API 호출을 위한 request options 설정
+    // 장소 검색 API 호출을 위한 request options 설정
     const searchOptions = {
       url: encodedUrl,
       method: 'GET',
       headers: {
-        Authorization: `KakaoAK 2d4f4e6fa070601e33b1c58b04cde4ab`,
+        Authorization: `KakaoAK ${process.env.KAKAO_MAP_API}`,
       },
     };
 
@@ -61,8 +62,18 @@ app.get('/searchHospital', (req: Request, res: Response) => {
 
       const data = JSON.parse(body);
 
-      // `documents` 속성이 없는 경우를 처리
-      const hospitals = data.documents ? data.documents.map((doc: { place_name: any }) => doc.place_name) : [];
+      const hospitals = data.documents
+        ? data.documents
+            .filter((doc: any) => !doc.category_name.includes('한의원'))
+            .map((doc: any) => ({
+              name: doc.place_name,
+              address: doc.road_address_name || doc.address_name,
+              phone: doc.phone,
+              homepage: doc.place_url,
+              category: doc.category_name,
+              category_group_name: doc.category_group_name,
+            }))
+        : [];
 
       res.json({
         location: address,
