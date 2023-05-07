@@ -1,5 +1,4 @@
 import * as express from 'express';
-import Default_Controller from '../controllers/pages/Default_Controller';
 
 const router = express.Router();
 

@@ -1,17 +1,18 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import Users from './Users';
-@Entity()
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import {Users} from './Users';
+import {Status_Default} from './Status_Default'
+@Entity({ name: 'Status_Hormone' })
 export class Status_Hormone {
-  @PrimaryGeneratedColumn({ type: 'int' })
   @PrimaryGeneratedColumn('increment')
-  Hormone_id!: number;
+  Status_Hormone_id!: number;
 
-  @Column({ type: 'varchar', nullable: false })
-  @ManyToOne(() => Users, (users) => users.ID)
-  User_id!: string;
+  @ManyToOne(() => Users, (user) => user.Users_ID)
+  @JoinColumn({ name: 'User_id' })
+  User_id!: Users | number;
 
-  @Column({ type: 'varchar', nullable: false, unique: true })
-  Test_date!: string;
+  @ManyToOne(() => Status_Default, (test) => test.Status_Default_ID)
+  @JoinColumn({ name: 'Test_id' })
+  Test_id!: Status_Default | number;
 
   @Column({ type: 'float', nullable: true })
   AMH!: number;

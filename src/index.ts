@@ -1,23 +1,20 @@
 import * as express from 'express';
+import { RequestHandler, ErrorRequestHandler, Request, Response, NextFunction } from 'express';
+
 import * as dotenv from 'dotenv';
 import * as cors from 'cors';
 import * as cookieParser from 'cookie-parser';
 import * as expressSession from 'express-session';
-// import * as passport from 'passport';
 import * as hpp from 'hpp';
 import * as Helmet from 'helmet';
 
-import defaultRouter from './routes/default';
-
 import { MySQLDataSource } from './data-source';
-
-// Controllers (route handlers)
-// import * as userController from './controllers/userController';
+import defaultRouter from './api/routes/defaultPage';
 
 dotenv.config();
 const app = express();
 const prod: boolean = process.env.NODE_ENV === 'production';
-
+app.set('port', prod ? process.env.PORT : 8080);
 
 // DB connection
 MySQLDataSource.initialize()
@@ -27,8 +24,6 @@ MySQLDataSource.initialize()
   .catch((err) => {
     console.error('Error during MySQL DataSource Initialization', err);
   });
-app.set('port', prod ? process.env.PORT : 3065);
-
 
 // Middleware
 if (prod) {
@@ -66,14 +61,17 @@ app.use(
     name: 'rnbck',
   })
 );
-// app.use(passport.initialize());
-// app.use(passport.session());
 
 app.use('/defaultPage', defaultRouter);
 
 // Register Routes
 app.get('/', (req, res, next) => {
   res.send('Initialized Hola server');
+});
+
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.error(err);
+  res.status(500).send('서버 에러 발생!');
 });
 
 // Server Listening

@@ -84,7 +84,3 @@ app.get('/searchHospital', (req: Request, res: Response) => {
     });
   });
 });
-
-app.listen(3065, () => {
-  console.log('Server started on port 3065');
-});

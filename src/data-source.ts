@@ -1,6 +1,9 @@
 import 'reflect-metadata';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { DataSource } from 'typeorm';
+import {config} from 'dotenv';
+
+config();
 
 export const MySQLDataSource = new DataSource({
   type: 'mysql',
@@ -10,10 +13,10 @@ export const MySQLDataSource = new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   synchronize: true,
-  logging: true,
+  logging: false,
   entities: ['dist/entity/**/*.js'],
-  migrations: ['dist/migration/**/*.js'],
-  subscribers: ['dist/subscriber/**/*.js'],
+  migrations: [],
+  subscribers: [],
   namingStrategy: new SnakeNamingStrategy(),
   /**
    * namingStrategy

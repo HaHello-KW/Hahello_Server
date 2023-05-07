@@ -1,7 +1,6 @@
 import * as express from 'express';
 import { S3 } from '@aws-sdk/client-s3';
 import * as AWS from 'aws-sdk';
-import Default_Controller from '../controllers/pages/Default_Controller'
 const app = express();
 
 app.set('port', process.env.PORT || 8080);

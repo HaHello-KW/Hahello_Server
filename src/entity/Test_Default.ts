@@ -1,27 +1,25 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
-import Test from './Test';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Tests } from './Tests';
 
-@Entity()
+@Entity({ name: 'Test_Default'})
 export class Test_Default {
-  @PrimaryGeneratedColumn({ type: 'int' })
   @PrimaryGeneratedColumn('increment')
-  Test_Default_id!: number;
+  Test_Default_ID!: number;
 
-  @Column({ type: 'datetime', nullable: false, unique: true })
-  @OneToOne(() => Test, (test) => test.Test_date)
-  Test_date!: Date;
+  @ManyToOne(() => Tests, (test) => test.test_date)
+  Test_date!: Tests | Date;
 
-  @Column({ type: 'varchar', nullable: false })
-  Birth!: string;
+  @Column({ type: 'char', nullable: false, length: 8 })
+  Birth!: string; //'19980422'
 
   @Column({ type: 'int', nullable: false })
-  Ovary_Type!: number;
+  Ovary_Type!: number; //1,2,3,4,5
 
-  @Column({ type: 'char', nullable: false })
-  Married_Type!: string;
+  @Column({ type: 'char', nullable: false, length: 1})
+  Married_Type!: string; //'A','B','C','D','E'
 
-  @Column({ nullable: false })
-  Is_Injection!: boolean;
+  // @Column({ nullable: false })
+  // Is_Injection!: boolean; //
 }
 
 export default Test_Default;
