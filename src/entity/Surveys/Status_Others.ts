@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { Users } from './Users';
+import { Users } from '../Users/Users';
 import {Status_Default} from './Status_Default'
-import { DiseaseType, MedicineType } from './Enums/const';
+import { DiseaseType, MedicineType } from '../Enums/const';
 @Entity({ name: 'Status_Others' })
 export class Status_Others {
   @PrimaryGeneratedColumn('increment')

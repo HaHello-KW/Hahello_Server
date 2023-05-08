@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne } from 'typeorm';
-import { Users } from './Users';
+import { Users } from '../Users/Users';
 @Entity({ name: 'Tests' })
 export class Tests {
   @PrimaryGeneratedColumn('increment')

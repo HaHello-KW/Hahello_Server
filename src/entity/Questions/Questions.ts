@@ -1,47 +1,57 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, ManyToMany } from 'typeorm';
-import { Question_Types, Picker_Types, Page_Types } from './Enums/question_const';
+import { Question_Types, Picker_Types, Page_Types } from '../Enums/question_const';
 
 @Entity({ name: 'Questions' })
 export class Questions {
   @PrimaryGeneratedColumn('increment')
   Questions_ID!: number;
 
-  @Column({ type: 'enum', enum: Page_Types, nullable: false})
-  PageType!: Page_Types
+  @Column({ type: 'enum', enum: Page_Types, nullable: false })
+  page_type!: Page_Types;
 
-  @Column({ type: 'int', nullable: false})
-  Pglevel!: number;
+  @Column({ type: 'varchar', nullable: false })
+  page_name!: string;
+
+  @Column({ type: 'int', nullable: false })
+  page_level!: number;
 
   @Column({ type: 'enum', enum: Question_Types, nullable: false })
-  Question_type!: Question_Types;
+  question_type!: Question_Types;
 
   @Column({ type: 'varchar', nullable: true })
-  QuestionTxt!: string;
+  question_txt!: string;
 
   @Column('simple-json', { nullable: true })
-  SelectionTxt!: {
+  selection_txt!: {
     contents: string[];
   };
 
   @Column({ type: 'enum', enum: Picker_Types, nullable: true })
-  FirstPickerType!: Picker_Types;
+  first_picker_type!: Picker_Types;
 
   @Column({ type: 'varchar', nullable: true })
-  FirstlineTxt!: string;
+  first_line_txt!: string;
 
   @Column({ type: 'enum', enum: Picker_Types, nullable: true })
-  SecondPickerType!: Picker_Types;
+  second_picker_type!: Picker_Types;
 
   @Column({ type: 'varchar', nullable: true })
-  SecondlineTxt!: string;
+  second_line_txt!: string;
 
   @Column({ type: 'enum', enum: Picker_Types, nullable: true })
-  ThirdPickerType!: Picker_Types;
+  third_picker_type!: Picker_Types;
 
   @Column({ type: 'varchar', nullable: true })
-  ThirdlineTxt!: string;
+  third_line_txt!: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  img_path!: string;
 
   @Column({ type: 'varchar', nullable: false })
-  ImgPath!: string;
+  next_page!: string;
 }
 export default Questions;
+
+/*
+ ** simple-json -> string[] 으로 변환 후 저장할 것.
+ */
