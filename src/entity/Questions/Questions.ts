@@ -46,9 +46,6 @@ export class Questions {
 
   @Column({ type: 'varchar', nullable: true })
   img_path!: string;
-
-  @Column({ type: 'varchar', nullable: false })
-  next_page!: string;
 }
 export default Questions;
 
