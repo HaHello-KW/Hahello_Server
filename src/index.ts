@@ -8,8 +8,9 @@ import * as expressSession from 'express-session';
 import * as hpp from 'hpp';
 import * as Helmet from 'helmet';
 
-import { MySQLDataSource } from './data-source';
+import { MainDataSource, QuestionDataSource } from './data-source';
 import defaultRouter from './api/routes/defaultPage';
+import typeRouter from './api/routes/typePage';
 
 dotenv.config();
 const app = express();
@@ -17,12 +18,19 @@ const prod: boolean = process.env.NODE_ENV === 'production';
 app.set('port', prod ? process.env.PORT : 8080);
 
 // DB connection
-MySQLDataSource.initialize()
+MainDataSource.initialize()
   .then(() => {
-    console.log('MySQL DataSource has been initialized!');
+    console.log('# MySQL: Main DataSource has been initialized!');
   })
   .catch((err) => {
-    console.error('Error during MySQL DataSource Initialization', err);
+    console.error('Error during MySQL: Main DataSource Initialization', err);
+  });
+QuestionDataSource.initialize()
+  .then(() => {
+    console.log('# MySQL: Question DataSource has been initialized!');
+  })
+  .catch((err) => {
+    console.error('Error during MySQL: Question DataSource Initialization', err);
   });
 
 // Middleware
@@ -63,6 +71,7 @@ app.use(
 );
 
 app.use('/defaultPage', defaultRouter);
+app.use('/typePage', typeRouter);
 
 // Register Routes
 app.get('/', (req, res, next) => {
@@ -76,5 +85,5 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
 // Server Listening
 app.listen(app.get('port'), () => {
-  console.log(`Hola-server is running on PORT: ${app.get('port')}`);
+  console.log(`# Hola-server is running on PORT: ${app.get('port')}`);
 });
