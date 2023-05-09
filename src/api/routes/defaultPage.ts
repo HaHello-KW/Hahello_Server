@@ -18,7 +18,7 @@ router.get('/', async (req, res, next) => {
       },
     });
     if (questions.length === 0) {
-      return res.status(404).json({ message: 'DefaultPage 질문 조회 실패' });
+      return res.status(404).json({ message: 'DefaultPage 조회 실패 (질문이 존재하지 않습니다.)' });
     }
     const responseDTO = questions.map((questions) => {
       return {
@@ -36,7 +36,6 @@ router.get('/', async (req, res, next) => {
         third_picker_type: getKeyName(question_metaenums.Picker_Types, questions.third_picker_type),
         third_line_txt: questions.third_line_txt,
         img_path: questions.img_path,
-        next_page: questions.next_page,
       };
     })
     return res.status(200).json({ responseDTO });

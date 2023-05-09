@@ -66,12 +66,12 @@ app.use(
       secure: false, //https -> true
       domain: prod ? '.hola.com' : undefined,
     },
-    name: 'rnbck',
+    name: 'hola',
   })
 );
 
-app.use('/defaultPage', defaultRouter);
-app.use('/typePage', typeRouter);
+app.use('/question/default', defaultRouter);
+app.use('/question/type', typeRouter);
 
 // Register Routes
 app.get('/', (req, res, next) => {

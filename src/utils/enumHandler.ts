@@ -10,3 +10,25 @@ export function getKeyName(enum_type: question_metaenums, value: number) {
       return Question_Types[value];
   }
 }
+
+export function getUserType(value: string) {
+  try {
+    switch (value) {
+        case 'A':
+          return Page_Types.TypePage_A;
+        case 'B':
+          return Page_Types.TypePage_B;
+        case 'C':
+          return Page_Types.TypePage_C;
+        case 'D':
+          return Page_Types.TypePage_D;
+        case 'E':
+          return Page_Types.TypePage_E;
+        default:
+          throw new Error('올바른 params 값이 아닙니다.');
+      }
+  }
+  catch (err) {
+    console.error(err);
+  }
+}

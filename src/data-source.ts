@@ -31,7 +31,7 @@ export const QuestionDataSource = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE_QUESTION,
-  synchronize: true,
+  synchronize: false,
   logging: false,
   entities: ['dist/entity/Questions/*.js', 'dist/entity/Enums/*.js'],
   migrations: [],

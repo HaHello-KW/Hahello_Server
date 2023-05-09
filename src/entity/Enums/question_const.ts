@@ -2,10 +2,15 @@ export enum question_metaenums {
   Question_Types, Picker_Types, Page_Types,
 }
 
+
 export enum Page_Types {
   DefaultPage = 1,
-  TypePage = 2,
-  ResultPage = 3,
+  TypePage_A,
+  TypePage_B,
+  TypePage_C,
+  TypePage_D,
+  TypePage_E,
+  ResultPage,
 }
 
 export enum Question_Types {
