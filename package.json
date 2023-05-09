@@ -10,7 +10,8 @@
   "scripts": {
     "server": "tsc-watch --onSuccess \"node dist/index.js\" ",
     "build": "tsc",
-    "start": "npm run build && node ./dist"
+    "start": "npm run build && node ./dist",
+    "lint": "./node_modules/.bin/eslint ."
   },
   "author": {
     "name": "Seungho Song",
