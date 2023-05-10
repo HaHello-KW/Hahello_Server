@@ -3,20 +3,13 @@ import { QuestionDataSource } from '../../../data-source';
 import Questions from '../../../entity/Questions/Questions';
 import { question_metaenums, Page_Types, Picker_Types, Question_Types } from '../../../entity/Enums/question_const';
 import { getKeyName } from '../../../utils/enumHandler';
+import { getDefaultPages } from '../../../services/Questions/defaultService';
 
 const router = Router();
 
 router.get('/', async (req, res, next) => {
   try {
-    const questionRepository = QuestionDataSource.getRepository(Questions);
-    const questions = await questionRepository.find({
-      where: {
-        page_type: Page_Types.DefaultPage,
-      },
-      order: {
-        Questions_ID: 'ASC',
-      },
-    });
+    const questions = await getDefaultPages();
     if (questions.length === 0) {
       return res.status(500).json({ message: 'DefaultPage 조회 실패 (질문이 존재하지 않습니다.)' });
     }

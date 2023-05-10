@@ -1,4 +1,4 @@
-import * as express from 'express';
+import express from 'express';
 import { S3 } from '@aws-sdk/client-s3';
 import * as AWS from 'aws-sdk';
 const app = express();
