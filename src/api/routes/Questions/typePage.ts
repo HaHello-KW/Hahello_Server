@@ -1,14 +1,13 @@
 import { Router, Request, Response } from 'express';
-import { QuestionDataSource } from '../../data-source';
-import Questions from '../../entity/Questions/Questions';
-import { question_metaenums, Page_Types, Picker_Types, Question_Types } from '../../entity/Enums/question_const';
-import { getKeyName, getUserType } from '../../utils/enumHandler';
+import { QuestionDataSource } from '../../../data-source';
+import Questions from '../../../entity/Questions/Questions';
+import { question_metaenums, Page_Types, Picker_Types, Question_Types } from '../../../entity/Enums/question_const';
+import { getKeyName, getUserType } from '../../../utils/enumHandler';
 
 const router = Router();
 
 router.get('/:types', async (req, res, next) => {
   try {
-    
     const questionRepository = QuestionDataSource.getRepository(Questions);
     const questions = await questionRepository.find({
       where: {
@@ -19,13 +18,17 @@ router.get('/:types', async (req, res, next) => {
       },
     });
     if (questions.length === 0) {
-      return res.status(500).json({ message: 'TypePage 조회 실패 (질문이 존재하지 않습니다.)' });
+      return res.status(500).json({
+        message: 'TypePage 조회 실패 (질문이 존재하지 않습니다.)',
+      });
     }
     const _max_level = await questionRepository
       .createQueryBuilder()
       .select('MAX(page_level) AS max_level')
-      .where('page_type = :pageType', {pageType: getUserType(req.params.types)})
-      .getRawOne()
+      .where('page_type = :pageType', {
+        pageType: getUserType(req.params.types),
+      })
+      .getRawOne();
 
     const responseDTO = questions.map((questions) => {
       return {
@@ -33,7 +36,7 @@ router.get('/:types', async (req, res, next) => {
         page_type: getKeyName(question_metaenums.Page_Types, questions.page_type),
         page_name: questions.page_name,
         page_level: questions.page_level,
-        max_level : _max_level.max_level,
+        max_level: _max_level.max_level,
         question_type: getKeyName(question_metaenums.Question_Types, questions.question_type),
         question_txt: questions.question_txt,
         selection_txt: questions.selection_txt,
@@ -46,7 +49,9 @@ router.get('/:types', async (req, res, next) => {
         img_path: questions.img_path,
       };
     });
-    return res.status(200).json({ responseDTO });
+    return res.status(200).json({
+      responseDTO,
+    });
   } catch (err) {
     console.error(err);
     return next(err);

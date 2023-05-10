@@ -1,16 +1,16 @@
-import * as express from 'express';
+import express from 'express';
 import { RequestHandler, ErrorRequestHandler, Request, Response, NextFunction } from 'express';
 
-import * as dotenv from 'dotenv';
-import * as cors from 'cors';
-import * as cookieParser from 'cookie-parser';
-import * as expressSession from 'express-session';
-import * as hpp from 'hpp';
-import * as Helmet from 'helmet';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import expressSession from 'express-session';
+import hpp from 'hpp';
+import Helmet from 'helmet';
 
 import { MainDataSource, QuestionDataSource } from './data-source';
-import defaultRouter from './api/routes/defaultPage';
-import typeRouter from './api/routes/typePage';
+import defaultRouter from './api/routes/Questions/defaultPage';
+import typeRouter from './api/routes/Questions/typePage';
 
 dotenv.config();
 const app = express();

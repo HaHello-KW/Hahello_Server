@@ -1,8 +1,8 @@
 import { Router, Request, Response } from 'express';
-import { QuestionDataSource } from '../../data-source';
-import Questions from '../../entity/Questions/Questions';
-import {question_metaenums, Page_Types, Picker_Types, Question_Types} from '../../entity/Enums/question_const';
-import {getKeyName} from '../../utils/enumHandler';
+import { QuestionDataSource } from '../../../data-source';
+import Questions from '../../../entity/Questions/Questions';
+import { question_metaenums, Page_Types, Picker_Types, Question_Types } from '../../../entity/Enums/question_const';
+import { getKeyName } from '../../../utils/enumHandler';
 
 const router = Router();
 
@@ -37,7 +37,7 @@ router.get('/', async (req, res, next) => {
         third_line_txt: questions.third_line_txt,
         img_path: questions.img_path,
       };
-    })
+    });
     return res.status(200).json({ responseDTO });
   } catch (err) {
     console.error(err);
