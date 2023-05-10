@@ -18,7 +18,7 @@ router.get('/', async (req, res, next) => {
       },
     });
     if (questions.length === 0) {
-      return res.status(404).json({ message: 'DefaultPage 조회 실패 (질문이 존재하지 않습니다.)' });
+      return res.status(500).json({ message: 'DefaultPage 조회 실패 (질문이 존재하지 않습니다.)' });
     }
     const responseDTO = questions.map((questions) => {
       return {
