@@ -9,6 +9,6 @@ export class Tests {
   test_date!: Date;
 
   @ManyToOne(() => Users, (users) => users.Users_ID)
-  @JoinColumn({ name: 'event_Users_ID' })
+  @JoinColumn({ name: 'Tester_Info' })
   event_Users_ID!: Users | number;
 }

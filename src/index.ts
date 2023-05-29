@@ -11,6 +11,8 @@ import Helmet from 'helmet';
 import { MainDataSource, QuestionDataSource } from './data-source';
 import defaultRouter from './api/routes/Questions/defaultPage';
 import typeRouter from './api/routes/Questions/typePage';
+import testRouter from './api/routes/TestDatas/testData'
+// import kakaomapRouter from './api/kakao/map_api';
 
 dotenv.config();
 const app = express();
@@ -72,6 +74,8 @@ app.use(
 
 app.use('/question/default', defaultRouter);
 app.use('/question/type', typeRouter);
+app.use('/test', testRouter);
+// app.use('/near-hospital', kakaomapRouter);
 
 // Register Routes
 app.get('/', (req, res, next) => {
