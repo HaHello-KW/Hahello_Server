@@ -12,7 +12,7 @@ export const MainDataSource = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE_MAIN,
-  synchronize: true,
+  synchronize: false,
   logging: false,
   entities: ['dist/entity/Enums/**/*.js', 'dist/entity/Surveys/**/*.js', 'dist/entity/Users/**/*.js'],
   migrations: [],
