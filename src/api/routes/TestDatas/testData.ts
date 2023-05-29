@@ -65,7 +65,7 @@ router.post('/user/:id/new-testdata', async (req, res, next) => {
     }
     await testRepository.save(newTest);
 
-    const requestData = req.body;
+    const requestData = [...req.body];
     const questionRepository = QuestionDataSource.getRepository(Questions);
     const answerRepository = MainDataSource.getRepository(Test_Answers);
 
