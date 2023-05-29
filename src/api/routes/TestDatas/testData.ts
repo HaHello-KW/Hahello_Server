@@ -69,7 +69,7 @@ router.post('/user/:id/new-testdata', async (req, res, next) => {
     const questionRepository = QuestionDataSource.getRepository(Questions);
     const answerRepository = MainDataSource.getRepository(Test_Answers);
 
-    await requestData.forEach(async (data: ITestData) => {
+    for (const data of requestData) {
       let questionID = data.questionID;
       const question = await questionRepository.findOne({ where: { Questions_ID: questionID } });
       if (!question) {
@@ -112,8 +112,8 @@ router.post('/user/:id/new-testdata', async (req, res, next) => {
           break;
       }
       await answerRepository.save(newAnswer);
-      res.status(200).json({ message: 'Test_Answer을 저장했습니다.' });
-    });
+    };
+    res.status(200).json({ message: 'Test_Answer을 저장했습니다.' });
   } catch (err) {
     console.error(err);
     return next(err);
