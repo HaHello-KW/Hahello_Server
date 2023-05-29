@@ -18,6 +18,16 @@ dayjs().format('YYYY-MM-DD');
 
 const router = Router();
 
+router.get('/', async (req, res, next) => {
+  try {
+    res.send('Testdata Router 입니다.');
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+
 router.get('/user/:id', async (req, res, next) => {
   try {
     const testerName = await getUserNameById(req.params.id);
