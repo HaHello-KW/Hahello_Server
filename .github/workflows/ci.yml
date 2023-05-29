@@ -1,4 +1,4 @@
-name: Node.js CI/CD
+name: Node.js CI
 
 on:
   push:
@@ -20,27 +20,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Docker Login
-        run: docker login -u ${{ secrets.USERNAME }} -p ${{ secrets.PASSWORD }}
-      - name: Docker Build
-        env:
-          PLATFORM: linux/amd64
-          REPO: hola_server
+      - name: Docker build
         run: |
-          docker build --platform $PLATFORM -t $REPO .
-          docker tag $REPO ${{ secrets.USERNAME }}/${REPO}:${GITHUB_SHA::7}
-          docker push ${{ secrets.USERNAME }}/${REPO}:${GITHUB_SHA::7}
-      - name: Docker Pull & Run From Hub
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST_IP }}
-          username: ${{ secrets.SSH_USERNAME}}
-          key: ${{secrets.SSH_KEY}}
-          port: ${{secrets.PORT}}
-          timeout: 40s
-          envs: GITHUB_SHA
-          script: |
-            docker login
-            docker pull ${{secrets.USERNAME}}/${REPO}
-            docker stop $REPO
-            docker rm $REPO
+          docker login -u ${{ secrets.USERNAME }} -p ${{ secrets.PASSWORD }}
+          docker build --platform linux/amd64 -t hola_server .
+          docker tag hola_server seungho422/hola_server:${GITHUB_SHA::7}
+          docker push seungho422/hola_server:${GITHUB_SHA::7}
