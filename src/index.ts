@@ -79,7 +79,7 @@ app.use('/test', testRouter);
 
 // Register Routes
 app.get('/', (req, res, next) => {
-  res.send('Initialized Hola server');
+  res.send('Initialized Hola server_latest version: 23.5.29');
 });
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
